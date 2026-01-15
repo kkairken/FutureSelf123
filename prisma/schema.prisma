@@ -1,0 +1,107 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  language  String    @default("en") // en, ru, kz
+  credits   Int       @default(1)   // 1 free credit on registration
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  chapters  Chapter[]
+  payments  Payment[]
+  magicLinks MagicLink[]
+  subscriptions Subscription[]
+
+  @@index([email])
+}
+
+model Chapter {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // User input
+  name        String
+  currentLife String   @db.Text
+  pastEvents  String   @db.Text
+  fears       String   @db.Text
+  futureVision String  @db.Text
+  archetype   String
+  tone        String
+  language    String   @default("en") // en, ru, kz
+
+  // Generated content
+  content     String?  @db.Text
+  status      String   @default("pending") // pending, generating, completed, failed
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  amount          Int      // в центах
+  currency        String   @default("usd")
+  status          String   // pending, completed, failed
+  stripeSessionId String?  @unique
+  stripePaymentId String?
+
+  productType     String   // 1_chapter, 5_chapters, 10_chapters, subscription
+  creditsAdded    Int      @default(0)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([stripeSessionId])
+}
+
+model MagicLink {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt DateTime
+  used      Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([email])
+}
+
+model Subscription {
+  id                 String   @id @default(cuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  stripeSubscriptionId String  @unique
+  stripePriceId      String
+  status             String   // active, canceled, past_due
+  currentPeriodEnd   DateTime
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([userId])
+  @@index([stripeSubscriptionId])
+}
