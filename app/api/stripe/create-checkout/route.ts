@@ -4,6 +4,13 @@ import { createCheckoutSession, PRICING } from "@/lib/stripe";
 
 export async function POST(request: Request) {
   try {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return NextResponse.json(
+        { error: "Payments are disabled" },
+        { status: 503 }
+      );
+    }
+
     const authHeader = request.headers.get("Authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

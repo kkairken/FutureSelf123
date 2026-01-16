@@ -4,6 +4,13 @@ import { handleSuccessfulPayment } from "@/lib/stripe";
 
 export async function POST(request: Request) {
   try {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return NextResponse.json(
+        { error: "Payments are disabled" },
+        { status: 503 }
+      );
+    }
+
     const { sessionId } = await request.json();
 
     if (!sessionId) {
