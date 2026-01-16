@@ -1,8 +1,18 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-02-24.acacia",
-});
+let stripeClient: Stripe | null = null;
+
+export function getStripeClient() {
+  if (!stripeClient) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error("STRIPE_SECRET_KEY is not set");
+    }
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2025-02-24.acacia",
+    });
+  }
+  return stripeClient;
+}
 
 export const PRICING = {
   "1_chapter": {
@@ -32,6 +42,7 @@ export async function createCheckoutSession(
   productType: keyof typeof PRICING,
   userEmail: string
 ) {
+  const stripe = getStripeClient();
   const product = PRICING[productType];
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -69,6 +80,7 @@ export async function createCheckoutSession(
 }
 
 export async function handleSuccessfulPayment(sessionId: string) {
+  const stripe = getStripeClient();
   const session = await stripe.checkout.sessions.retrieve(sessionId);
 
   if (session.payment_status === "paid" || session.status === "complete") {

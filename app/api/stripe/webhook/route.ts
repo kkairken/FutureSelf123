@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { stripe } from "@/lib/stripe";
+import { getStripeClient } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
@@ -12,6 +12,14 @@ export async function POST(request: Request) {
   }
 
   let event;
+  let stripe;
+
+  try {
+    stripe = getStripeClient();
+  } catch (error) {
+    console.error("Stripe config error:", error);
+    return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
+  }
 
   try {
     event = stripe.webhooks.constructEvent(
