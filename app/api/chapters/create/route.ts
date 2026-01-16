@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { getUserFromToken } from "@/lib/auth";
 import { generateChapter } from "@/lib/openai";
 
+export const runtime = "edge";
+
 export async function POST(request: Request) {
   try {
     const authHeader = request.headers.get("Authorization");

@@ -1,15 +1,3 @@
-import nodemailer from "nodemailer";
-
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || "587"),
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
-
 export async function sendMagicLinkEmail(email: string, token: string) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const magicLink = `${appUrl}/auth/verify?token=${token}`;
@@ -41,10 +29,23 @@ export async function sendMagicLinkEmail(email: string, token: string) {
     </html>
   `;
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM,
-    to: email,
-    subject: "Sign in to Future Self",
-    html,
+  if (!process.env.EMAIL_PROVIDER) {
+    console.log("Magic link (email disabled):", magicLink);
+    return;
+  }
+
+  // Placeholder for external email providers (e.g., Resend, Postmark).
+  await fetch(process.env.EMAIL_PROVIDER, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.EMAIL_API_KEY || ""}`,
+    },
+    body: JSON.stringify({
+      to: email,
+      from: process.env.EMAIL_FROM,
+      subject: "Sign in to Future Self",
+      html,
+    }),
   });
 }
