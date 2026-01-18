@@ -117,6 +117,10 @@ export type Dictionary = {
       namePlaceholder: string;
       language: string;
       complete: string;
+      consentPrefix: string;
+      consentOffer: string;
+      consentPrivacy: string;
+      consentTerms: string;
     };
   };
   dashboard: {
@@ -220,6 +224,17 @@ export type Dictionary = {
     failedTitle: string;
     failedBody: string;
     tryAgain: string;
+  };
+  footer: {
+    legal: string;
+    offer: string;
+    privacy: string;
+    terms: string;
+    payment: string;
+    delivery: string;
+    contacts: string;
+    payments: string;
+    freedomPay: string;
   };
   howItWorks: {
     title: string;
@@ -428,6 +443,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
         namePlaceholder: "John Doe",
         language: "Preferred Language",
         complete: "Complete Registration",
+        consentPrefix: "By clicking, you agree to the",
+        consentOffer: "Public Offer",
+        consentPrivacy: "Privacy Policy",
+        consentTerms: "User Agreement",
       },
     },
     dashboard: {
@@ -564,6 +583,17 @@ export const dictionaries: Record<Locale, Dictionary> = {
       failedTitle: "Payment Failed",
       failedBody: "Something went wrong. Please contact support if you were charged.",
       tryAgain: "Try Again",
+    },
+    footer: {
+      legal: "Legal",
+      offer: "Public Offer",
+      privacy: "Privacy Policy",
+      terms: "User Agreement",
+      payment: "Payment Procedure",
+      delivery: "Digital Delivery Info",
+      contacts: "Company Contacts",
+      payments: "Payments",
+      freedomPay: "Payments are processed via Freedom Pay",
     },
     howItWorks: {
       title: "How It Works",
@@ -770,6 +800,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
         namePlaceholder: "Иван Иванов",
         language: "Предпочитаемый язык",
         complete: "Завершить регистрацию",
+        consentPrefix: "Нажимая кнопку, вы принимаете",
+        consentOffer: "Публичную оферту",
+        consentPrivacy: "Политику конфиденциальности",
+        consentTerms: "Пользовательское соглашение",
       },
     },
     dashboard: {
@@ -907,6 +941,17 @@ export const dictionaries: Record<Locale, Dictionary> = {
       failedBody: "Что-то пошло не так. Свяжись с поддержкой, если списание произошло.",
       tryAgain: "Попробовать снова",
     },
+    footer: {
+      legal: "Юридическая информация",
+      offer: "Публичная оферта",
+      privacy: "Политика конфиденциальности",
+      terms: "Пользовательское соглашение",
+      payment: "Описание порядка оплаты",
+      delivery: "Способы получения цифрового товара",
+      contacts: "Контактные данные",
+      payments: "Платёжные системы",
+      freedomPay: "Платежи обрабатываются через Freedom Pay",
+    },
     howItWorks: {
       title: "Как это работает",
       subtitle: "Future Self использует ИИ и психологию для создания мощных нарративов трансформации идентичности.",
@@ -914,7 +959,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         title: "Научная основа",
         p1: "Твоя идентичность не фиксирована. Это история, которую ты рассказываешь себе, подкреплённая повторением и верой.",
         p2: "Future Self использует этот принцип, создавая нарратив, где ты уже стал тем, кем хочешь быть. Когда ты читаешь эту историю многократно, твой мозг начинает принимать её как реальность.",
-        p3: "Это не аффirmации. Это не визуализация. Это программирование идентичности через нарратив — ты пишешь себя в существование.",
+        p3: "Это не аффирмация. Это не визуализация. Это программирование идентичности через нарратив — ты пишешь себя в существование.",
       },
       process: {
         title: "Процесс",
@@ -953,7 +998,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
             description: "Это не то, что читаешь раз и забываешь. Это инструмент для ежедневного перепрограммирования идентичности.",
           },
           notAffirmations: {
-            title: "Не аффirmации",
+            title: "Не аффирмация",
             description: "Никаких поверхностных 'я есть' утверждений. Это глубокая психология, управляемая нарративом, в которую мозг действительно верит.",
           },
           notGeneric: {
@@ -1112,6 +1157,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
         namePlaceholder: "Иван Иванов",
         language: "Қалаулы тіл",
         complete: "Тіркелуді аяқтау",
+        consentPrefix: "Батырманы басу арқылы сіз",
+        consentOffer: "Жария офертаны",
+        consentPrivacy: "Құпиялық саясатын",
+        consentTerms: "Пайдаланушы келісімін",
       },
     },
     dashboard: {
@@ -1248,6 +1297,17 @@ export const dictionaries: Record<Locale, Dictionary> = {
       failedTitle: "Төлем өтпеді",
       failedBody: "Бірдеңе дұрыс болмады. Егер төлем алынса, қолдауға хабарлас.",
       tryAgain: "Қайта көру",
+    },
+    footer: {
+      legal: "Құқықтық ақпарат",
+      offer: "Жария оферта",
+      privacy: "Құпиялық саясаты",
+      terms: "Пайдаланушы келісімі",
+      payment: "Төлем тәртібі",
+      delivery: "Цифрлық өнімді алу жолдары",
+      contacts: "Компания байланыстары",
+      payments: "Төлем жүйелері",
+      freedomPay: "Төлемдер Freedom Pay арқылы өңделеді",
     },
     howItWorks: {
       title: "Қалай жұмыс істейді",

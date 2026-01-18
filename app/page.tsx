@@ -175,20 +175,6 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-12">
-        <div className="container mx-auto px-4 text-center text-foreground/60 text-sm">
-          <p>&copy; 2025 Future Self. {t.home.footer.tagline}</p>
-          <div className="flex gap-6 justify-center mt-4">
-            <Link href="/privacy" className="hover:text-accent transition-colors">
-              {t.home.footer.privacy}
-            </Link>
-            <Link href="/terms" className="hover:text-accent transition-colors">
-              {t.home.footer.terms}
-            </Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -2,8 +2,8 @@ import { getDocContent } from "@/lib/docs";
 
 export const dynamic = "force-static";
 
-export default function TermsPage() {
-  const { title, body } = getDocContent("terms");
+export default function PaymentInfoPage() {
+  const { title, body } = getDocContent("payment");
 
   return (
     <div className="min-h-screen py-20">

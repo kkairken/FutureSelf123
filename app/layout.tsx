@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Toaster } from "@/components/Toaster";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import { Footer } from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-inter" });
 const merriweather = Merriweather({
@@ -31,6 +32,7 @@ export default function RootLayout({
           <main className="min-h-screen">
             {children}
           </main>
+          <Footer />
           <Toaster />
         </LanguageProvider>
       </body>
