@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { getUserFromToken } from "@/lib/auth";
 import { createCheckoutSession, PRICING } from "@/lib/stripe";
 
-export const runtime = "edge";
 
 export async function POST(request: Request) {
   try {

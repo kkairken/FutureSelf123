@@ -8,7 +8,6 @@ import { toast } from "@/components/Toaster";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { formatString } from "@/lib/i18n/format";
 
-export const runtime = "edge";
 
 export default function ChapterPage() {
   const params = useParams();

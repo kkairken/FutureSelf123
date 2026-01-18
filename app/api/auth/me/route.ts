@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getUserFromToken } from "@/lib/auth";
 
-export const runtime = "edge";
 
 export async function GET(request: Request) {
   try {
