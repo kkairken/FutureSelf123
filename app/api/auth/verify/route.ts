@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { verifyMagicLink, generateAuthToken } from "@/lib/auth";
 
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     const { token } = await request.json();

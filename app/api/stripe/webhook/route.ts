@@ -4,6 +4,8 @@ import { getStripeClient } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
     return NextResponse.json({ error: "Payments are disabled" }, { status: 503 });

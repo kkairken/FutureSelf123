@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { handleSuccessfulPayment } from "@/lib/stripe";
 
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     if (!process.env.STRIPE_SECRET_KEY) {

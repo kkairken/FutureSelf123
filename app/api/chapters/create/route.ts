@@ -4,6 +4,8 @@ import { getUserFromToken } from "@/lib/auth";
 import { generateChapter } from "@/lib/openai";
 
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     const authHeader = request.headers.get("Authorization");

@@ -3,6 +3,8 @@ import { getUserFromToken } from "@/lib/auth";
 import { createCheckoutSession, PRICING } from "@/lib/stripe";
 
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     if (!process.env.STRIPE_SECRET_KEY) {
