@@ -1,28 +1,24 @@
 import { prisma } from "./prisma";
 
 function base64Encode(value: string) {
-  if (typeof Buffer !== "undefined") {
-    return Buffer.from(value).toString("base64");
-  }
+  // Use Web API for edge runtime compatibility
   return btoa(value);
 }
 
 function base64Decode(value: string) {
-  if (typeof Buffer !== "undefined") {
-    return Buffer.from(value, "base64").toString();
-  }
+  // Use Web API for edge runtime compatibility
   return atob(value);
 }
 
 async function randomHex(bytes: number) {
-  if (globalThis.crypto?.getRandomValues) {
-    const array = new Uint8Array(bytes);
-    globalThis.crypto.getRandomValues(array);
-    return Array.from(array, (b) => b.toString(16).padStart(2, "0")).join("");
+  // Web Crypto API is always available in edge runtime
+  if (!globalThis.crypto?.getRandomValues) {
+    throw new Error("Web Crypto API is not available");
   }
 
-  const cryptoModule = await import("crypto");
-  return cryptoModule.randomBytes(bytes).toString("hex");
+  const array = new Uint8Array(bytes);
+  globalThis.crypto.getRandomValues(array);
+  return Array.from(array, (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 export async function generateMagicLink(email: string): Promise<string> {
