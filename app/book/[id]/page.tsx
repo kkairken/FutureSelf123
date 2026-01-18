@@ -1,0 +1,168 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { Button } from "@/components/Button";
+import { toast } from "@/components/Toaster";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+
+export const runtime = "edge";
+
+export default function BookPage() {
+  const params = useParams();
+  const router = useRouter();
+  const { t, locale } = useLanguage();
+  const [book, setBook] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [continuing, setContinuing] = useState(false);
+
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const token = localStorage.getItem("auth_token");
+        if (!token) {
+          router.push("/create");
+          return;
+        }
+
+        const res = await fetch(`/api/books/${params.id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          setBook(data.book);
+        } else {
+          toast.error(data.error || t.common.error);
+          router.push("/dashboard");
+        }
+      } catch (error) {
+        toast.error(t.common.error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBook();
+  }, [params.id, router, t.common.error]);
+
+  const handleContinue = async () => {
+    setContinuing(true);
+    try {
+      const token = localStorage.getItem("auth_token");
+      const res = await fetch("/api/chapters/continue", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ bookId: book.id }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        router.push(`/chapter/${data.chapterId}`);
+      } else {
+        toast.error(data.error || t.common.error);
+      }
+    } catch (error) {
+      toast.error(t.common.error);
+    } finally {
+      setContinuing(false);
+    }
+  };
+
+  if (loading || !book) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4 animate-pulse">📖</div>
+          <h2 className="text-2xl font-bold">{t.common.loading}</h2>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen py-20">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <Button variant="ghost" onClick={() => router.push("/dashboard")}>
+            ← {t.chapter.backToDashboard}
+          </Button>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="text-4xl font-bold mb-2">{book.title}</h1>
+          <p className="text-foreground/70">{book.futureVision}</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="mb-8 flex gap-4"
+        >
+          <Button onClick={handleContinue} loading={continuing}>
+            {t.dashboard.books.continue}
+          </Button>
+          <Button variant="secondary" onClick={() => router.push("/create")}>
+            {t.dashboard.books.startNew}
+          </Button>
+        </motion.div>
+
+        <div className="space-y-3">
+          {book.chapters.map((chapter: any) => (
+            <motion.div
+              key={chapter.id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="p-4 bg-card border border-border rounded-xl hover:border-accent/50 transition-all cursor-pointer"
+              onClick={() => {
+                if (chapter.status === "completed") {
+                  router.push(`/chapter/${chapter.id}`);
+                }
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-semibold">
+                    {t.chapter.title.replace("{name}", `#${chapter.chapterNumber}`)}
+                  </div>
+                  <div className="text-sm text-foreground/60">
+                    {new Date(chapter.createdAt).toLocaleDateString(locale)}
+                  </div>
+                </div>
+                <div>
+                  {chapter.status === "completed" && (
+                    <span className="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-sm">
+                      ✓ {t.dashboard.chapters.ready}
+                    </span>
+                  )}
+                  {chapter.status === "generating" && (
+                    <span className="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm animate-pulse">
+                      {t.dashboard.chapters.generating}
+                    </span>
+                  )}
+                  {chapter.status === "failed" && (
+                    <span className="px-3 py-1 bg-red-500/10 text-red-400 rounded-full text-sm">
+                      {t.dashboard.chapters.failed}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

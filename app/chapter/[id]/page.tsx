@@ -130,6 +130,15 @@ export default function ChapterPage() {
           <Button variant="ghost" onClick={() => router.push("/dashboard")}>
             ← {t.chapter.backToDashboard}
           </Button>
+          {chapter.book?.id && (
+            <Button
+              variant="ghost"
+              onClick={() => router.push(`/book/${chapter.book.id}`)}
+              className="ml-2"
+            >
+              ← {t.chapter.backToStory}
+            </Button>
+          )}
         </motion.div>
 
         <motion.article
@@ -140,7 +149,9 @@ export default function ChapterPage() {
         >
           <div className="mb-12 text-center border-b border-border pb-8">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-accent bg-clip-text text-transparent">
-              {formatString(t.chapter.title, { name: chapter.name })}
+              {formatString(t.chapter.title, {
+                name: chapter.chapterNumber ? `#${chapter.chapterNumber}` : chapter.name,
+              })}
             </h1>
             <div className="flex items-center justify-center gap-4 text-sm text-foreground/60">
               <span>

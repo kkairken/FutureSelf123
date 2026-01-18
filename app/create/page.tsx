@@ -39,6 +39,7 @@ export default function CreateChapterPage() {
   }, []);
 
   const [formData, setFormData] = useState({
+    bookTitle: "",
     name: "",
     currentLife: "",
     pastEvents: "",
@@ -140,6 +141,14 @@ export default function CreateChapterPage() {
           onSubmit={handleSubmit}
           className="space-y-6"
         >
+          <Input
+            label={t.create.form.bookTitle}
+            name="bookTitle"
+            value={formData.bookTitle}
+            onChange={handleChange}
+            placeholder={t.create.form.bookTitlePlaceholder}
+          />
+
           <Input
             label={t.create.form.name}
             name="name"

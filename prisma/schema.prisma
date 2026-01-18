@@ -19,6 +19,7 @@ model User {
   updatedAt DateTime  @updatedAt
 
   chapters  Chapter[]
+  books     Book[]
   payments  Payment[]
   magicLinks MagicLink[]
   subscriptions Subscription[]
@@ -26,10 +27,36 @@ model User {
   @@index([email])
 }
 
+model Book {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title       String
+  name        String
+  currentLife String   @db.Text
+  pastEvents  String   @db.Text
+  fears       String   @db.Text
+  futureVision String  @db.Text
+  archetype   String
+  tone        String
+  language    String   @default("en") // en, ru, kz
+
+  chapters    Chapter[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
+
 model Chapter {
   id          String   @id @default(cuid())
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId      String?
+  book        Book?    @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  chapterNumber Int    @default(1)
 
   // User input
   name        String
@@ -49,6 +76,7 @@ model Chapter {
   updatedAt   DateTime @updatedAt
 
   @@index([userId])
+  @@index([bookId])
   @@index([status])
 }
 

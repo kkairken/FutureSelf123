@@ -12,26 +12,11 @@ export default function DashboardPage() {
   const router = useRouter();
   const { t, locale } = useLanguage();
   const [user, setUser] = useState<any>(null);
-  const [chapters, setChapters] = useState<any[]>([]);
+  const [books, setBooks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const archetypeLabels: Record<string, string> = {
-    creator: t.archetypes.creator,
-    leader: t.archetypes.leader,
-    sage: t.archetypes.sage,
-    rebel: t.archetypes.rebel,
-    lover: t.archetypes.lover,
-    hero: t.archetypes.hero,
-    magician: t.archetypes.magician,
-    explorer: t.archetypes.explorer,
-  };
-
-  const toneLabels: Record<string, string> = {
-    calm: t.tones.calm,
-    powerful: t.tones.powerful,
-    philosophical: t.tones.philosophical,
-    triumphant: t.tones.triumphant,
-  };
+  const totalChapters = books.reduce((count, book) => count + (book._count?.chapters || 0), 0);
+  const completedStories = books.filter((book) => book.chapters?.[0]?.status === "completed").length;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,14 +40,14 @@ export default function DashboardPage() {
 
         setUser(userData.user);
 
-        // Fetch chapters
+        // Fetch books
         const chaptersRes = await fetch("/api/chapters/list", {
           headers: { Authorization: `Bearer ${token}` }
         });
         const chaptersData = await chaptersRes.json();
 
         if (chaptersRes.ok) {
-          setChapters(chaptersData.chapters || []);
+          setBooks(chaptersData.books || []);
         }
       } catch (error) {
         toast.error(t.common.error);
@@ -123,14 +108,14 @@ export default function DashboardPage() {
 
           <div className="p-6 bg-card border border-border rounded-xl">
             <div className="text-3xl font-bold text-accent mb-2">
-              {chapters.length}
+              {totalChapters}
             </div>
             <div className="text-sm text-foreground/70">{t.dashboard.stats.totalChapters}</div>
           </div>
 
           <div className="p-6 bg-card border border-border rounded-xl">
             <div className="text-3xl font-bold text-accent mb-2">
-              {chapters.filter(c => c.status === "completed").length}
+              {completedStories}
             </div>
             <div className="text-sm text-foreground/70">{t.dashboard.stats.completed}</div>
           </div>
@@ -144,7 +129,7 @@ export default function DashboardPage() {
           className="flex gap-4 mb-12"
         >
           <Link href="/create">
-            <Button>{t.dashboard.actions.createNew}</Button>
+            <Button>{t.dashboard.books.startNew}</Button>
           </Link>
           {user?.credits === 0 && (
             <Link href="/pricing">
@@ -153,78 +138,70 @@ export default function DashboardPage() {
           )}
         </motion.div>
 
-        {/* Chapters List */}
+        {/* Stories List */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <h2 className="text-2xl font-bold mb-6">{t.dashboard.chapters.title}</h2>
+          <h2 className="text-2xl font-bold mb-6">{t.dashboard.books.title}</h2>
 
-          {chapters.length === 0 ? (
+          {books.length === 0 ? (
             <div className="text-center py-12 bg-card border border-border rounded-xl">
               <div className="text-6xl mb-4">📖</div>
-              <h3 className="text-xl font-bold mb-2">{t.dashboard.chapters.noChapters}</h3>
-              <p className="text-foreground/70 mb-6">{t.dashboard.chapters.noChaptersDesc}</p>
+              <h3 className="text-xl font-bold mb-2">{t.dashboard.books.noBooks}</h3>
+              <p className="text-foreground/70 mb-6">{t.dashboard.books.noBooksDesc}</p>
               <Link href="/create">
-                <Button>{t.dashboard.chapters.createFirst}</Button>
+                <Button>{t.dashboard.books.createFirst}</Button>
               </Link>
             </div>
           ) : (
             <div className="space-y-4">
-              {chapters.map((chapter, i) => (
+              {books.map((book, i) => {
+                const latest = book.chapters?.[0];
+                return (
                 <motion.div
-                  key={chapter.id}
+                  key={book.id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
                   onClick={() => {
-                    if (chapter.status === "completed") {
-                      router.push(`/chapter/${chapter.id}`);
-                    }
+                    router.push(`/book/${book.id}`);
                   }}
-                  className={`p-6 bg-card border border-border rounded-xl hover:border-accent/50 transition-all ${
-                    chapter.status === "completed" ? "cursor-pointer" : ""
-                  }`}
+                  className="p-6 bg-card border border-border rounded-xl hover:border-accent/50 transition-all cursor-pointer"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold mb-2">{chapter.name}</h3>
+                      <h3 className="text-xl font-bold mb-2">{book.title}</h3>
                       <div className="flex items-center gap-4 text-sm text-foreground/60 mb-3">
-                        <span>
-                          {t.dashboard.chapters.archetype}: {archetypeLabels[chapter.archetype] || chapter.archetype}
-                        </span>
+                        <span>{t.dashboard.books.chaptersCount}: {book._count?.chapters || 0}</span>
                         <span>•</span>
                         <span>
-                          {t.dashboard.chapters.tone}: {toneLabels[chapter.tone] || chapter.tone}
+                          {t.dashboard.books.lastUpdated}: {new Date(book.updatedAt).toLocaleDateString(locale)}
                         </span>
-                        <span>•</span>
-                        <span>{new Date(chapter.createdAt).toLocaleDateString(locale)}</span>
                       </div>
-                      <p className="text-foreground/70 line-clamp-2">
-                        {chapter.futureVision}
-                      </p>
+                      <p className="text-foreground/70 line-clamp-2">{book.futureVision}</p>
                     </div>
                     <div>
-                      {chapter.status === "completed" && (
-                        <span className="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-sm">
-                          ✓ {t.dashboard.chapters.ready}
-                        </span>
-                      )}
-                      {chapter.status === "generating" && (
+                      {latest?.status === "generating" && (
                         <span className="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm animate-pulse">
                           {t.dashboard.chapters.generating}
                         </span>
                       )}
-                      {chapter.status === "failed" && (
+                      {latest?.status === "failed" && (
                         <span className="px-3 py-1 bg-red-500/10 text-red-400 rounded-full text-sm">
                           {t.dashboard.chapters.failed}
+                        </span>
+                      )}
+                      {latest?.status === "completed" && (
+                        <span className="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-sm">
+                          ✓ {t.dashboard.chapters.ready}
                         </span>
                       )}
                     </div>
                   </div>
                 </motion.div>
-              ))}
+              )})}
             </div>
           )}
         </motion.div>

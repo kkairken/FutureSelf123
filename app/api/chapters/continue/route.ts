@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getUserFromToken } from "@/lib/auth";
-import { generateChapter } from "@/lib/openai";
+import { generateChapterContinuation } from "@/lib/openai";
 
-
-export const dynamic = 'force-dynamic';
+export const runtime = "edge";
 
 export async function POST(request: Request) {
   try {
@@ -21,51 +20,36 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
-    // Check credits
     if (user.credits < 1) {
       return NextResponse.json({ error: "Insufficient credits" }, { status: 403 });
     }
 
-    const data = await request.json();
+    const { bookId } = await request.json();
 
-    let bookId = data.bookId as string | undefined;
-    let book;
-
-    if (bookId) {
-      book = await prisma.book.findUnique({ where: { id: bookId } });
-      if (!book || book.userId !== user.id) {
-        return NextResponse.json({ error: "Book not found" }, { status: 404 });
-      }
-    } else {
-      const title = data.bookTitle?.trim() || data.name?.trim() || "Untitled Story";
-      book = await prisma.book.create({
-        data: {
-          userId: user.id,
-          title,
-          name: data.name,
-          currentLife: data.currentLife,
-          pastEvents: data.pastEvents,
-          fears: data.fears,
-          futureVision: data.futureVision,
-          archetype: data.archetype,
-          tone: data.tone,
-          language: data.language || user.language || "en",
-        },
-      });
-      bookId = book.id;
+    if (!bookId) {
+      return NextResponse.json({ error: "Book ID required" }, { status: 400 });
     }
 
-    const chapterCount = await prisma.chapter.count({
-      where: { bookId },
+    const book = await prisma.book.findUnique({
+      where: { id: bookId },
+      include: {
+        chapters: { orderBy: { chapterNumber: "desc" }, take: 1 },
+      },
     });
 
-    // Create chapter in pending status
+    if (!book || book.userId !== user.id) {
+      return NextResponse.json({ error: "Book not found" }, { status: 404 });
+    }
+
+    const lastChapter = book.chapters[0];
+    const nextNumber = (lastChapter?.chapterNumber || 0) + 1;
+
     const chapter = await prisma.chapter.create({
       data: {
         userId: user.id,
-        bookId,
-        chapterNumber: chapterCount + 1,
-        name: data.name,
+        bookId: book.id,
+        chapterNumber: nextNumber,
+        name: book.name,
         currentLife: book.currentLife,
         pastEvents: book.pastEvents,
         fears: book.fears,
@@ -78,18 +62,16 @@ export async function POST(request: Request) {
     });
 
     await prisma.book.update({
-      where: { id: bookId },
+      where: { id: book.id },
       data: { updatedAt: new Date() },
     });
 
-    // Deduct credit
     await prisma.user.update({
       where: { id: user.id },
       data: { credits: { decrement: 1 } },
     });
 
-    // Generate chapter asynchronously
-    generateChapterAsync(chapter.id, {
+    generateContinuationAsync(chapter.id, {
       name: book.name,
       currentLife: book.currentLife,
       pastEvents: book.pastEvents,
@@ -97,24 +79,26 @@ export async function POST(request: Request) {
       futureVision: book.futureVision,
       archetype: book.archetype,
       tone: book.tone,
-      language: chapter.language,
+      language: book.language,
+      previousContent: lastChapter?.content || "",
+      chapterNumber: nextNumber,
     });
 
-    return NextResponse.json({ success: true, chapterId: chapter.id, bookId });
+    return NextResponse.json({ success: true, chapterId: chapter.id });
   } catch (error) {
-    console.error("Create chapter error:", error);
-    return NextResponse.json({ error: "Failed to create chapter" }, { status: 500 });
+    console.error("Continue chapter error:", error);
+    return NextResponse.json({ error: "Failed to continue chapter" }, { status: 500 });
   }
 }
 
-async function generateChapterAsync(chapterId: string, input: any) {
+async function generateContinuationAsync(chapterId: string, input: any) {
   try {
     await prisma.chapter.update({
       where: { id: chapterId },
       data: { status: "generating" },
     });
 
-    const content = await generateChapter(input);
+    const content = await generateChapterContinuation(input);
 
     await prisma.chapter.update({
       where: { id: chapterId },
@@ -124,7 +108,7 @@ async function generateChapterAsync(chapterId: string, input: any) {
       },
     });
   } catch (error) {
-    console.error("Generation error:", error);
+    console.error("Continuation error:", error);
     await prisma.chapter.update({
       where: { id: chapterId },
       data: { status: "failed" },

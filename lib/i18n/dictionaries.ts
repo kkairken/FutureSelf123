@@ -71,6 +71,8 @@ export type Dictionary = {
     subtitle: string;
     creditsRemaining: string;
     form: {
+      bookTitle: string;
+      bookTitlePlaceholder: string;
       name: string;
       namePlaceholder: string;
       currentLife: string;
@@ -128,6 +130,16 @@ export type Dictionary = {
     welcomeBack: string;
     tagline: string;
     loading: string;
+    books: {
+      title: string;
+      noBooks: string;
+      noBooksDesc: string;
+      createFirst: string;
+      chaptersCount: string;
+      lastUpdated: string;
+      continue: string;
+      startNew: string;
+    };
     stats: {
       creditsRemaining: string;
       totalChapters: string;
@@ -160,6 +172,7 @@ export type Dictionary = {
     failedDesc: string;
     tryAgain: string;
     backToDashboard: string;
+    backToStory: string;
     readDaily: string;
     createAnother: string;
     copyText: string;
@@ -397,6 +410,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       subtitle: "Share your story. We'll write you into your future.",
       creditsRemaining: "You have {credits} credit(s) remaining",
       form: {
+        bookTitle: "Story Title",
+        bookTitlePlaceholder: "Give this story a title",
         name: "Your Name",
         namePlaceholder: "What should we call you?",
         currentLife: "Your Current Life (2-3 sentences)",
@@ -454,6 +469,16 @@ export const dictionaries: Record<Locale, Dictionary> = {
       welcomeBack: "Welcome back",
       tagline: "Your transformation journey awaits.",
       loading: "Loading your dashboard...",
+      books: {
+        title: "Your Stories",
+        noBooks: "No stories yet",
+        noBooksDesc: "Create your first transformation story",
+        createFirst: "Create Your First Story",
+        chaptersCount: "Chapters",
+        lastUpdated: "Last updated",
+        continue: "Continue Story",
+        startNew: "Start New Story",
+      },
       stats: {
         creditsRemaining: "Credits Remaining",
         totalChapters: "Total Chapters",
@@ -486,6 +511,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       failedDesc: "Something went wrong. Your credit has been refunded.",
       tryAgain: "Try Again",
       backToDashboard: "Back to Dashboard",
+      backToStory: "Back to Story",
       readDaily: "Read this daily. Let it reprogram your identity.",
       createAnother: "Create Another Chapter",
       copyText: "Copy Text",
@@ -754,6 +780,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       subtitle: "Расскажи свою историю. Мы напишем тебя в будущее.",
       creditsRemaining: "У тебя осталось {credits} кредитов",
       form: {
+        bookTitle: "Название истории",
+        bookTitlePlaceholder: "Дай истории название",
         name: "Твоё имя",
         namePlaceholder: "Как к тебе обращаться?",
         currentLife: "Твоя текущая жизнь (2-3 предложения)",
@@ -811,6 +839,16 @@ export const dictionaries: Record<Locale, Dictionary> = {
       welcomeBack: "С возвращением",
       tagline: "Твой путь трансформации ждёт.",
       loading: "Загружаем панель...",
+      books: {
+        title: "Твои истории",
+        noBooks: "Историй пока нет",
+        noBooksDesc: "Создай свою первую историю трансформации",
+        createFirst: "Создать первую историю",
+        chaptersCount: "Глав",
+        lastUpdated: "Обновлено",
+        continue: "Продолжить историю",
+        startNew: "Новая история",
+      },
       stats: {
         creditsRemaining: "Осталось кредитов",
         totalChapters: "Всего глав",
@@ -843,6 +881,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       failedDesc: "Что-то пошло не так. Твой кредит возвращён.",
       tryAgain: "Попробовать снова",
       backToDashboard: "Назад в панель",
+      backToStory: "К истории",
       readDaily: "Читай это ежедневно. Позволь перепрограммировать идентичность.",
       createAnother: "Создать ещё главу",
       copyText: "Копировать текст",
@@ -1111,6 +1150,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       subtitle: "Өз тарихыңды айт. Біз сені болашаққа жазамыз.",
       creditsRemaining: "Сенде {credits} кредит қалды",
       form: {
+        bookTitle: "Оқиға атауы",
+        bookTitlePlaceholder: "Оқиғаға атау бер",
         name: "Сенің атың",
         namePlaceholder: "Сені қалай атауға болады?",
         currentLife: "Қазіргі өміріің (2-3 сөйлем)",
@@ -1168,6 +1209,16 @@ export const dictionaries: Record<Locale, Dictionary> = {
       welcomeBack: "Қайтып келуімен",
       tagline: "Сенің өзгеру жолың күтіп тұр.",
       loading: "Панельді жүктеп жатырмыз...",
+      books: {
+        title: "Әңгімелерің",
+        noBooks: "Әзірге әңгіме жоқ",
+        noBooksDesc: "Алғашқы өзгеру тарихыңды жаса",
+        createFirst: "Бірінші әңгіме жасау",
+        chaptersCount: "Тарау саны",
+        lastUpdated: "Соңғы жаңарту",
+        continue: "Әңгімені жалғастыру",
+        startNew: "Жаңа әңгіме",
+      },
       stats: {
         creditsRemaining: "Қалған кредиттер",
         totalChapters: "Барлық тараулар",
@@ -1200,6 +1251,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       failedDesc: "Бірдеңе дұрыс болмады. Кредитің қайтарылды.",
       tryAgain: "Қайта көру",
       backToDashboard: "Панельге оралу",
+      backToStory: "Әңгімеге оралу",
       readDaily: "Мұны күнде оқы. Идентификацияны қайта бағдарламалауға рұқсат бер.",
       createAnother: "Тағы бір тарау жасау",
       copyText: "Мәтінді көшіру",

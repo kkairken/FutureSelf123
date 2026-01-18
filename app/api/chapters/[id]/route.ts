@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getUserFromToken } from "@/lib/auth";
 
-
-export const dynamic = 'force-dynamic';
+export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 export async function GET(
   request: Request,
@@ -25,6 +25,7 @@ export async function GET(
 
     const chapter = await prisma.chapter.findUnique({
       where: { id: params.id },
+      include: { book: true },
     });
 
     if (!chapter) {

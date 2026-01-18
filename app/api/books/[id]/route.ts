@@ -5,7 +5,10 @@ import { getUserFromToken } from "@/lib/auth";
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request) {
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const authHeader = request.headers.get("Authorization");
 
@@ -20,27 +23,28 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
-    const books = await prisma.book.findMany({
-      where: { userId: user.id },
-      orderBy: { updatedAt: "desc" },
+    const book = await prisma.book.findUnique({
+      where: { id: params.id },
       include: {
         chapters: {
-          orderBy: { chapterNumber: "desc" },
-          take: 1,
+          orderBy: { chapterNumber: "asc" },
           select: {
             id: true,
+            chapterNumber: true,
             status: true,
             createdAt: true,
-            chapterNumber: true,
           },
         },
-        _count: { select: { chapters: true } },
       },
     });
 
-    return NextResponse.json({ books });
+    if (!book || book.userId !== user.id) {
+      return NextResponse.json({ error: "Book not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ book });
   } catch (error) {
-    console.error("List chapters error:", error);
-    return NextResponse.json({ error: "Failed to list chapters" }, { status: 500 });
+    console.error("Get book error:", error);
+    return NextResponse.json({ error: "Failed to get book" }, { status: 500 });
   }
 }
