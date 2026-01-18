@@ -59,7 +59,7 @@ export async function createCheckoutSession(
         quantity: 1,
       },
     ],
-    mode: productType === "subscription" ? "subscription" : "payment",
+    mode: "payment",
     success_url: `${appUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${appUrl}/pricing`,
     metadata: {
