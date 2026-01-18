@@ -16,14 +16,14 @@ export default function PricingPage() {
 
   const rateMap = {
     KZT: 1,
-    USD: 1 / 470,
-    EUR: 1 / 510,
+    USD: 1 / (Number(process.env.NEXT_PUBLIC_RATE_USD) || 470),
+    EUR: 1 / (Number(process.env.NEXT_PUBLIC_RATE_EUR) || 510),
   };
 
   const roundingMap = {
-    KZT: 10,
-    USD: 1,
-    EUR: 1,
+    KZT: Number(process.env.NEXT_PUBLIC_ROUND_KZT) || 10,
+    USD: Number(process.env.NEXT_PUBLIC_ROUND_USD) || 1,
+    EUR: Number(process.env.NEXT_PUBLIC_ROUND_EUR) || 1,
   };
 
   const currencySymbol = {
@@ -44,7 +44,7 @@ export default function PricingPage() {
       {
         id: "1_chapter",
         name: t.pricing.plans.single,
-        price: formatPrice(1000),
+        price: formatPrice(Number(process.env.NEXT_PUBLIC_PRICE_7_KZT) || 1000),
         credits: 7,
         description: t.pricing.plans.singleDesc,
         features: [
@@ -56,7 +56,7 @@ export default function PricingPage() {
       {
         id: "5_chapters",
         name: t.pricing.plans.starter,
-        price: formatPrice(2000),
+        price: formatPrice(Number(process.env.NEXT_PUBLIC_PRICE_20_KZT) || 2000),
         credits: 20,
         description: t.pricing.plans.starterDesc,
         features: [
@@ -69,7 +69,7 @@ export default function PricingPage() {
       {
         id: "10_chapters",
         name: t.pricing.plans.bundle,
-        price: formatPrice(5000),
+        price: formatPrice(Number(process.env.NEXT_PUBLIC_PRICE_40_KZT) || 5000),
         credits: 40,
         description: t.pricing.plans.bundleDesc,
         features: [
@@ -207,6 +207,7 @@ export default function PricingPage() {
           <p>{t.pricing.securePayment}</p>
           <p className="mt-2">{t.pricing.creditsNeverExpire}</p>
           <p className="mt-2">{t.pricing.roundingNotice}</p>
+          <p className="mt-2">{t.pricing.ratesNotice}</p>
         </motion.div>
       </div>
     </div>

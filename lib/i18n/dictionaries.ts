@@ -207,6 +207,7 @@ export type Dictionary = {
     securePayment: string;
     creditsNeverExpire: string;
     roundingNotice: string;
+    ratesNotice: string;
   };
   privacy: {
     title: string;
@@ -547,6 +548,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       securePayment: "Secure payment powered by Freedom Pay",
       creditsNeverExpire: "Credits never expire",
       roundingNotice: "Prices are converted in real time and rounded up.",
+      ratesNotice: "Exchange rates are set by the platform and may change.",
     },
     privacy: {
       title: "Privacy Policy",
@@ -918,6 +920,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       securePayment: "Безопасная оплата через Freedom Pay",
       creditsNeverExpire: "Кредиты никогда не истекают",
       roundingNotice: "Цены конвертируются в реальном времени и округляются вверх.",
+      ratesNotice: "Курсы валют задаются платформой и могут меняться.",
     },
     privacy: {
       title: "Политика конфиденциальности",
@@ -1289,6 +1292,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       securePayment: "Freedom Pay арқылы қауіпсіз төлем",
       creditsNeverExpire: "Кредиттер ешқашан мерзімі өтпейді",
       roundingNotice: "Бағалар нақты уақытта конвертацияланып, жоғарыға дөңгелектеледі.",
+      ratesNotice: "Валюта бағамдары платформа арқылы орнатылады және өзгеруі мүмкін.",
     },
     privacy: {
       title: "Құпиялық саясаты",

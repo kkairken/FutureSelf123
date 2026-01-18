@@ -17,17 +17,17 @@ export function getStripeClient() {
 export const PRICING = {
   "1_chapter": {
     credits: 7,
-    price: 1000, // KZT
+    price: Number(process.env.PRICE_7_KZT) || 1000,
     name: "7 Chapters",
   },
   "5_chapters": {
     credits: 20,
-    price: 2000, // KZT
+    price: Number(process.env.PRICE_20_KZT) || 2000,
     name: "20 Chapters",
   },
   "10_chapters": {
     credits: 40,
-    price: 5000, // KZT
+    price: Number(process.env.PRICE_40_KZT) || 5000,
     name: "40 Chapters",
   },
 };
