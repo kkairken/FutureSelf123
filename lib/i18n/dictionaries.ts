@@ -458,6 +458,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
         tryAgain: "Try Again",
         welcomeNew: "Welcome! Let's complete your profile.",
         welcomeBack: "Welcome back!",
+        goToDashboard: "Go to dashboard",
+        completeProfile: "Complete profile",
       },
       complete: {
         title: "Complete Your Profile",
@@ -833,6 +835,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
         tryAgain: "Попробовать снова",
         welcomeNew: "Добро пожаловать! Давай завершим профиль.",
         welcomeBack: "С возвращением!",
+        goToDashboard: "Перейти в панель",
+        completeProfile: "Заполнить профиль",
       },
       complete: {
         title: "Заполни профиль",
@@ -1208,6 +1212,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
         tryAgain: "Қайта көру",
         welcomeNew: "Қош келдің! Профильді аяқтайық.",
         welcomeBack: "Қайта қош келдің!",
+        goToDashboard: "Панельге өту",
+        completeProfile: "Профильді толтыру",
       },
       complete: {
         title: "Профильді толтыр",

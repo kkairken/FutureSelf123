@@ -11,6 +11,8 @@ export default function VerifyClient() {
   const searchParams = useSearchParams();
   const { t } = useLanguage();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const [nextRoute, setNextRoute] = useState<string | null>(null);
+  const [nextLabel, setNextLabel] = useState<string>("");
 
   useEffect(() => {
     const token = searchParams.get("token");
@@ -33,11 +35,15 @@ export default function VerifyClient() {
 
           if (!data.user.name) {
             toast.success(t.auth.verify.welcomeNew);
+            setNextRoute("/auth/complete");
+            setNextLabel(t.auth.verify.completeProfile);
             setTimeout(() => {
               router.push("/auth/complete");
             }, 1000);
           } else {
             toast.success(t.auth.verify.welcomeBack);
+            setNextRoute("/dashboard");
+            setNextLabel(t.auth.verify.goToDashboard);
             setTimeout(() => {
               router.push("/dashboard");
             }, 1000);
@@ -72,6 +78,14 @@ export default function VerifyClient() {
             <div className="text-6xl mb-4">✅</div>
             <h1 className="text-2xl font-bold mb-2">{t.auth.verify.success}</h1>
             <p className="text-foreground/70">{t.auth.verify.redirecting}</p>
+            {nextRoute && (
+              <button
+                onClick={() => router.push(nextRoute)}
+                className="mt-6 px-6 py-3 bg-accent hover:bg-accent-dark text-white rounded-lg transition-colors"
+              >
+                {nextLabel}
+              </button>
+            )}
           </>
         )}
 
