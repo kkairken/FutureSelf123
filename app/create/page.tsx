@@ -286,6 +286,21 @@ function AuthPrompt() {
             <Button type="submit" loading={loading} className="w-full">
               {loading ? t.common.loading : t.auth.signIn.sendLink}
             </Button>
+            <p className="text-xs text-foreground/60 text-center leading-relaxed">
+              {t.auth.complete.consentPrefix}{" "}
+              <a href="/offer" className="underline hover:text-accent">
+                {t.auth.complete.consentOffer}
+              </a>
+              ,{" "}
+              <a href="/privacy" className="underline hover:text-accent">
+                {t.auth.complete.consentPrivacy}
+              </a>{" "}
+              и{" "}
+              <a href="/terms" className="underline hover:text-accent">
+                {t.auth.complete.consentTerms}
+              </a>
+              .
+            </p>
           </form>
         )}
       </motion.div>
