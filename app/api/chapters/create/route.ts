@@ -73,7 +73,7 @@ export async function POST(request: Request) {
         archetype: book.archetype,
         tone: book.tone,
         language: book.language,
-        status: "pending",
+        status: "generating",
       },
     });
 
@@ -88,8 +88,7 @@ export async function POST(request: Request) {
       data: { credits: { decrement: 1 } },
     });
 
-    // Generate chapter asynchronously
-    generateChapterAsync(chapter.id, {
+    const content = await generateChapter({
       name: book.name,
       currentLife: book.currentLife,
       pastEvents: book.pastEvents,
@@ -100,34 +99,20 @@ export async function POST(request: Request) {
       language: chapter.language,
     });
 
-    return NextResponse.json({ success: true, chapterId: chapter.id, bookId });
-  } catch (error) {
-    console.error("Create chapter error:", error);
-    return NextResponse.json({ error: "Failed to create chapter" }, { status: 500 });
-  }
-}
-
-async function generateChapterAsync(chapterId: string, input: any) {
-  try {
     await prisma.chapter.update({
-      where: { id: chapterId },
-      data: { status: "generating" },
-    });
-
-    const content = await generateChapter(input);
-
-    await prisma.chapter.update({
-      where: { id: chapterId },
+      where: { id: chapter.id },
       data: {
         content,
         status: "completed",
       },
     });
+
+    return NextResponse.json({ success: true, chapterId: chapter.id, bookId });
   } catch (error) {
-    console.error("Generation error:", error);
-    await prisma.chapter.update({
-      where: { id: chapterId },
-      data: { status: "failed" },
-    });
+    console.error("Create chapter error:", error);
+    if ((error as any)?.message?.includes("OPENAI_API_KEY")) {
+      return NextResponse.json({ error: "OpenAI key missing" }, { status: 500 });
+    }
+    return NextResponse.json({ error: "Failed to create chapter" }, { status: 500 });
   }
 }
