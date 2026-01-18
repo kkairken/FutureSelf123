@@ -10,7 +10,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 export function Header() {
   const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
-  const { t, setLocale } = useLanguage();
+  const { t, setLocale, locale } = useLanguage();
 
   useEffect(() => {
     // Check for user session
@@ -24,14 +24,15 @@ export function Header() {
           if (data.user) {
             setUser(data.user);
             // Set user's preferred language
-            if (data.user.language) {
+            const saved = localStorage.getItem("locale");
+            if (!saved && data.user.language && data.user.language !== locale) {
               setLocale(data.user.language);
             }
           }
         })
         .catch(() => {});
     }
-  }, [setLocale]);
+  }, [setLocale, locale]);
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
