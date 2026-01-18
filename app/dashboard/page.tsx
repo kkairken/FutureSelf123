@@ -126,14 +126,16 @@ export default function DashboardPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="flex gap-4 mb-12"
+          className="flex flex-col sm:flex-row gap-4 mb-12"
         >
-          <Link href="/create">
-            <Button>{t.dashboard.books.startNew}</Button>
+          <Link href="/create" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto">{t.dashboard.books.startNew}</Button>
           </Link>
           {user?.credits === 0 && (
-            <Link href="/pricing">
-              <Button variant="secondary">{t.dashboard.actions.getCredits}</Button>
+            <Link href="/pricing" className="w-full sm:w-auto">
+              <Button variant="secondary" className="w-full sm:w-auto">
+                {t.dashboard.actions.getCredits}
+              </Button>
             </Link>
           )}
         </motion.div>
@@ -170,19 +172,19 @@ export default function DashboardPage() {
                   }}
                   className="p-6 bg-card border border-border rounded-xl hover:border-accent/50 transition-all cursor-pointer"
                 >
-                  <div className="flex items-start justify-between">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div className="flex-1">
                       <h3 className="text-xl font-bold mb-2">{book.title}</h3>
-                      <div className="flex items-center gap-4 text-sm text-foreground/60 mb-3">
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-foreground/60 mb-3">
                         <span>{t.dashboard.books.chaptersCount}: {book._count?.chapters || 0}</span>
-                        <span>•</span>
+                        <span className="hidden sm:inline">•</span>
                         <span>
                           {t.dashboard.books.lastUpdated}: {new Date(book.updatedAt).toLocaleDateString(locale)}
                         </span>
                       </div>
                       <p className="text-foreground/70 line-clamp-2">{book.futureVision}</p>
                     </div>
-                    <div>
+                    <div className="self-start sm:self-auto">
                       {latest?.status === "generating" && (
                         <span className="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm animate-pulse">
                           {t.dashboard.chapters.generating}

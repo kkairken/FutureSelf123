@@ -84,7 +84,7 @@ export default function BookPage() {
   }
 
   return (
-    <div className="min-h-screen py-20">
+    <div className="min-h-screen py-16 sm:py-20">
       <div className="container mx-auto px-4 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -109,12 +109,20 @@ export default function BookPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="mb-8 flex gap-4"
+          className="mb-8 flex flex-col sm:flex-row gap-4"
         >
-          <Button onClick={handleContinue} loading={continuing}>
+          <Button
+            onClick={handleContinue}
+            loading={continuing}
+            className="w-full sm:w-auto"
+          >
             {t.dashboard.books.continue}
           </Button>
-          <Button variant="secondary" onClick={() => router.push("/create")}>
+          <Button
+            variant="secondary"
+            onClick={() => router.push("/create")}
+            className="w-full sm:w-auto"
+          >
             {t.dashboard.books.startNew}
           </Button>
         </motion.div>
@@ -132,7 +140,7 @@ export default function BookPage() {
                 }
               }}
             >
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <div className="font-semibold">
                     {t.chapter.title.replace("{name}", `#${chapter.chapterNumber}`)}

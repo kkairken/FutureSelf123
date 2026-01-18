@@ -12,6 +12,7 @@ export function Header() {
   const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
   const { t, setLocale, locale } = useLanguage();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     // Check for user session
@@ -35,11 +36,18 @@ export function Header() {
     }
   }, [setLocale, locale]);
 
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
     setUser(null);
     window.location.href = "/";
   };
+
+  const navLinkClass =
+    "text-sm hover:text-accent transition-colors";
 
   return (
     <motion.header
@@ -48,56 +56,116 @@ export function Header() {
       className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl"
     >
       <nav className="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
-        <Link href="/" className="text-xl font-bold">
-          <span className="bg-gradient-to-r from-accent-light to-accent bg-clip-text text-transparent">
-            Future Self
-          </span>
-        </Link>
-
-        <div className="flex flex-wrap items-center gap-4">
-          <Link
-            href="/how-it-works"
-            className={`text-sm hover:text-accent transition-colors ${
-              pathname === "/how-it-works" ? "text-accent" : ""
-            }`}
-          >
-            {t.nav.howItWorks}
+        <div className="flex w-full items-center justify-between">
+          <Link href="/" className="text-xl font-bold">
+            <span className="bg-gradient-to-r from-accent-light to-accent bg-clip-text text-transparent">
+              Future Self
+            </span>
           </Link>
 
-          {user ? (
-            <>
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              onClick={() => setMobileOpen((open) => !open)}
+              className="p-2 rounded-lg border border-border hover:bg-card transition-colors"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            >
+              {mobileOpen ? (
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M6 6l12 12M18 6L6 18" strokeWidth={2} strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M3 6h18M3 12h18M3 18h18" strokeWidth={2} strokeLinecap="round" />
+                </svg>
+              )}
+            </button>
+          </div>
+
+          <div className="hidden md:flex items-center gap-4">
+            <Link
+              href="/how-it-works"
+              className={`${navLinkClass} ${pathname === "/how-it-works" ? "text-accent" : ""}`}
+            >
+              {t.nav.howItWorks}
+            </Link>
+
+            {user ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className={`${navLinkClass} ${pathname === "/dashboard" ? "text-accent" : ""}`}
+                >
+                  {t.nav.dashboard}
+                </Link>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-foreground/60">
+                    {user.credits} {t.nav.credits}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className={navLinkClass}
+                  >
+                    {t.nav.logout}
+                  </button>
+                </div>
+              </>
+            ) : (
               <Link
-                href="/dashboard"
-                className={`text-sm hover:text-accent transition-colors ${
-                  pathname === "/dashboard" ? "text-accent" : ""
-                }`}
+                href="/create"
+                className="px-4 py-2 bg-accent hover:bg-accent-dark text-white rounded-lg text-sm font-medium transition-colors"
               >
-                {t.nav.dashboard}
+                {t.nav.getStarted}
               </Link>
-              <div className="flex items-center gap-4">
+            )}
+
+            <ThemeToggle />
+            <LanguageSwitcher />
+          </div>
+        </div>
+
+        {mobileOpen && (
+          <div className="md:hidden w-full space-y-4">
+            <div className="grid gap-2">
+              <Link
+                href="/how-it-works"
+                className={`px-3 py-2 rounded-lg border border-border ${pathname === "/how-it-works" ? "text-accent border-accent" : ""}`}
+              >
+                {t.nav.howItWorks}
+              </Link>
+              {user && (
+                <Link
+                  href="/dashboard"
+                  className={`px-3 py-2 rounded-lg border border-border ${pathname === "/dashboard" ? "text-accent border-accent" : ""}`}
+                >
+                  {t.nav.dashboard}
+                </Link>
+              )}
+            </div>
+
+            {user ? (
+              <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
                 <span className="text-sm text-foreground/60">
                   {user.credits} {t.nav.credits}
                 </span>
-                <button
-                  onClick={handleLogout}
-                  className="text-sm hover:text-accent transition-colors"
-                >
+                <button onClick={handleLogout} className={navLinkClass}>
                   {t.nav.logout}
                 </button>
               </div>
-            </>
-          ) : (
-            <Link
-              href="/create"
-              className="px-4 py-2 bg-accent hover:bg-accent-dark text-white rounded-lg text-sm font-medium transition-colors"
-            >
-              {t.nav.getStarted}
-            </Link>
-          )}
+            ) : (
+              <Link
+                href="/create"
+                className="block text-center px-4 py-2 bg-accent hover:bg-accent-dark text-white rounded-lg text-sm font-medium transition-colors"
+              >
+                {t.nav.getStarted}
+              </Link>
+            )}
 
-          <ThemeToggle />
-          <LanguageSwitcher />
-        </div>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <LanguageSwitcher />
+            </div>
+          </div>
+        )}
       </nav>
     </motion.header>
   );
