@@ -105,16 +105,18 @@ export type Dictionary = {
       checkEmail: string;
       clickLink: string;
     };
-    verify: {
-      verifying: string;
-      success: string;
-      redirecting: string;
-      failed: string;
-      expired: string;
-      tryAgain: string;
-      welcomeNew: string;
-      welcomeBack: string;
-    };
+      verify: {
+        verifying: string;
+        success: string;
+        redirecting: string;
+        failed: string;
+        expired: string;
+        tryAgain: string;
+        welcomeNew: string;
+        welcomeBack: string;
+        goToDashboard: string;
+        completeProfile: string;
+      };
     complete: {
       title: string;
       subtitle: string;
