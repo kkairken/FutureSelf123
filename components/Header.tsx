@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   const pathname = usePathname();
@@ -94,6 +95,7 @@ export function Header() {
             </Link>
           )}
 
+          <ThemeToggle />
           <LanguageSwitcher />
         </div>
       </nav>

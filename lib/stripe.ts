@@ -30,6 +30,11 @@ export const PRICING = {
     price: Number(process.env.PRICE_40_KZT) || 5000,
     name: "40 Chapters",
   },
+  "subscription_100": {
+    credits: 100,
+    price: Number(process.env.PRICE_100_KZT) || 6000,
+    name: "100 Chapters / Month",
+  },
 };
 
 export async function createCheckoutSession(

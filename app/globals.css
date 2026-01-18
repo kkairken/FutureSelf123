@@ -6,6 +6,24 @@
   * {
     @apply border-border;
   }
+  :root {
+    --color-background: 248 250 252;
+    --color-foreground: 15 23 42;
+    --color-card: 255 255 255;
+    --color-border: 226 232 240;
+    --color-accent: 124 58 237;
+    --color-accent-dark: 109 40 217;
+    --color-accent-light: 167 139 250;
+  }
+  .dark {
+    --color-background: 10 10 10;
+    --color-foreground: 237 237 237;
+    --color-card: 21 21 21;
+    --color-border: 38 38 38;
+    --color-accent: 139 92 246;
+    --color-accent-dark: 124 58 237;
+    --color-accent-light: 167 139 250;
+  }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -24,16 +42,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: rgb(var(--color-background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #262626;
+  background: rgb(var(--color-border));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #404040;
+  background: rgb(var(--color-accent-dark));
 }
 
 /* Smooth animations */

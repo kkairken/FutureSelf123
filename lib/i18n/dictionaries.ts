@@ -13,6 +13,9 @@ export type Dictionary = {
     getStarted: string;
     logout: string;
     credits: string;
+    themeLight: string;
+    themeDark: string;
+    themeSystem: string;
   };
   home: {
     badge: string;
@@ -354,6 +357,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
       getStarted: "Get Started",
       logout: "Logout",
       credits: "credits",
+      themeLight: "Light theme",
+      themeDark: "Dark theme",
+      themeSystem: "System theme",
     },
     home: {
       badge: "Identity Programming Through Story",
@@ -530,7 +536,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         bundle: "40 Chapters",
         bundleDesc: "For deep, long-term work",
         subscription: "Monthly Subscription",
-        subscriptionDesc: "Ongoing transformation",
+        subscriptionDesc: "100 chapters every month",
         mostPopular: "Most Popular",
       },
       features: {
@@ -726,6 +732,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
       getStarted: "Начать",
       logout: "Выйти",
       credits: "кредитов",
+      themeLight: "Светлая тема",
+      themeDark: "Темная тема",
+      themeSystem: "Системная тема",
     },
     home: {
       badge: "Программирование идентичности через текст",
@@ -902,7 +911,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         bundle: "40 глав",
         bundleDesc: "Для глубокой и долгой работы",
         subscription: "Месячная подписка",
-        subscriptionDesc: "Постоянная трансформация",
+        subscriptionDesc: "100 глав каждый месяц",
         mostPopular: "Самый популярный",
       },
       features: {
@@ -1098,6 +1107,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
       getStarted: "Бастау",
       logout: "Шығу",
       credits: "кредиттер",
+      themeLight: "Жарық тақырып",
+      themeDark: "Қараңғы тақырып",
+      themeSystem: "Жүйелік тақырып",
     },
     home: {
       badge: "Мәтін арқылы идентификацияны бағдарламалау",
@@ -1274,7 +1286,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         bundle: "40 тарау",
         bundleDesc: "Терең және ұзақ жұмыс үшін",
         subscription: "Айлық жазылым",
-        subscriptionDesc: "Үздіксіз өзгеріс",
+        subscriptionDesc: "Ай сайын 100 тарау",
         mostPopular: "Ең танымал",
       },
       features: {

@@ -46,6 +46,7 @@ export default function PricingPage() {
         name: t.pricing.plans.single,
         price: formatPrice(Number(process.env.NEXT_PUBLIC_PRICE_7_KZT) || 1000),
         credits: 7,
+        period: "",
         description: t.pricing.plans.singleDesc,
         features: [
           `7 ${t.pricing.features.chapters}`,
@@ -58,6 +59,7 @@ export default function PricingPage() {
         name: t.pricing.plans.starter,
         price: formatPrice(Number(process.env.NEXT_PUBLIC_PRICE_20_KZT) || 2000),
         credits: 20,
+        period: "",
         description: t.pricing.plans.starterDesc,
         features: [
           `20 ${t.pricing.features.chapters}`,
@@ -71,10 +73,24 @@ export default function PricingPage() {
         name: t.pricing.plans.bundle,
         price: formatPrice(Number(process.env.NEXT_PUBLIC_PRICE_40_KZT) || 5000),
         credits: 40,
+        period: "",
         description: t.pricing.plans.bundleDesc,
         features: [
           `40 ${t.pricing.features.chapters}`,
           t.pricing.features.journey,
+          t.pricing.features.consistent,
+        ],
+      },
+      {
+        id: "subscription_100",
+        name: t.pricing.plans.subscription,
+        price: formatPrice(Number(process.env.NEXT_PUBLIC_PRICE_100_KZT) || 6000),
+        credits: 100,
+        period: t.home.pricing.perMonth,
+        description: t.pricing.plans.subscriptionDesc,
+        features: [
+          `100 ${t.pricing.features.chapters} ${t.home.pricing.perMonth}`,
+          t.pricing.features.cancel,
           t.pricing.features.consistent,
         ],
       },
@@ -154,7 +170,7 @@ export default function PricingPage() {
           </div>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.id}
@@ -175,6 +191,9 @@ export default function PricingPage() {
 
               <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
               <div className="text-4xl font-bold text-accent mb-2">{plan.price}</div>
+              {plan.period && (
+                <div className="text-sm text-foreground/60 mb-2">{plan.period}</div>
+              )}
               <p className="text-sm text-foreground/60 mb-6">{plan.description}</p>
 
               <ul className="space-y-3 mb-8">

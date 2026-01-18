@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,15 +10,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0a0a0a",
-        foreground: "#ededed",
+        background: "rgb(var(--color-background) / <alpha-value>)",
+        foreground: "rgb(var(--color-foreground) / <alpha-value>)",
         accent: {
-          DEFAULT: "#8b5cf6",
-          dark: "#7c3aed",
-          light: "#a78bfa",
+          DEFAULT: "rgb(var(--color-accent) / <alpha-value>)",
+          dark: "rgb(var(--color-accent-dark) / <alpha-value>)",
+          light: "rgb(var(--color-accent-light) / <alpha-value>)",
         },
-        card: "#151515",
-        border: "#262626",
+        card: "rgb(var(--color-card) / <alpha-value>)",
+        border: "rgb(var(--color-border) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],

@@ -9,9 +9,10 @@ export default function HomePage() {
   const { t } = useLanguage();
 
   const plans = [
-    { name: t.pricing.plans.single, price: "₸1,000", credits: 7 },
-    { name: t.pricing.plans.starter, price: "₸2,000", credits: 20 },
-    { name: t.pricing.plans.bundle, price: "₸5,000", credits: 40 },
+    { name: t.pricing.plans.single, price: "₸1,000", credits: 7, perMonth: false },
+    { name: t.pricing.plans.starter, price: "₸2,000", credits: 20, perMonth: false },
+    { name: t.pricing.plans.bundle, price: "₸5,000", credits: 40, perMonth: false },
+    { name: t.pricing.plans.subscription, price: "₸6,000", credits: 100, perMonth: true },
   ];
 
   const creditLabel = (count: number, perMonth?: boolean) => {
@@ -147,7 +148,7 @@ export default function HomePage() {
           <h2 className="text-4xl font-bold mb-4">{t.home.pricing.title}</h2>
           <p className="text-foreground/70 mb-12">{t.home.pricing.subtitle}</p>
 
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {plans.map((plan, i) => (
               <motion.div
                 key={i}
@@ -160,7 +161,7 @@ export default function HomePage() {
                 <h3 className="font-bold text-lg mb-2">{plan.name}</h3>
                 <div className="text-3xl font-bold text-accent mb-2">{plan.price}</div>
                 <p className="text-sm text-foreground/60">
-                  {creditLabel(plan.credits)}
+                  {creditLabel(plan.credits, plan.perMonth)}
                 </p>
               </motion.div>
             ))}
