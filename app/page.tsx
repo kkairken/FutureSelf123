@@ -51,7 +51,12 @@ export default function HomePage() {
 
           <div className="flex gap-4 justify-center">
             <Link href="/create">
-              <Button size="lg">{t.home.cta.create}</Button>
+              <Button
+                size="lg"
+                className="bg-white text-foreground hover:bg-white/90 dark:bg-accent dark:text-white dark:hover:bg-accent-dark"
+              >
+                {t.home.cta.create}
+              </Button>
             </Link>
             <Link href="/how-it-works">
               <Button size="lg" variant="secondary">
@@ -127,7 +132,7 @@ export default function HomePage() {
                 transition={{ delay: i * 0.1 }}
                 className="flex items-start gap-4 p-6 bg-card border border-border rounded-xl"
               >
-                <div className="flex-shrink-0 w-10 h-10 bg-accent rounded-full flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-10 h-10 bg-accent text-white rounded-full flex items-center justify-center font-bold">
                   {item.step}
                 </div>
                 <p className="text-lg pt-1">{item.text}</p>
@@ -156,10 +161,17 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-6 bg-card border border-border rounded-xl hover:border-accent transition-all"
+                className="p-6 bg-card border border-border rounded-xl hover:border-accent transition-all flex flex-col h-full"
               >
-                <h3 className="font-bold text-lg mb-2">{plan.name}</h3>
-                <div className="text-3xl font-bold text-accent mb-2">{plan.price}</div>
+                <h3 className="font-bold text-lg mb-2 min-h-[2.75rem]">{plan.name}</h3>
+                <div className="min-h-[4rem] mb-2">
+                  <div className="text-3xl font-bold text-accent">{plan.price}</div>
+                  {plan.perMonth ? (
+                    <div className="text-sm text-foreground/60">{t.home.pricing.perMonth}</div>
+                  ) : (
+                    <div className="h-5" aria-hidden="true" />
+                  )}
+                </div>
                 <p className="text-sm text-foreground/60">
                   {creditLabel(plan.credits, plan.perMonth)}
                 </p>

@@ -177,23 +177,27 @@ export default function PricingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className={`p-8 rounded-2xl border ${
+              className={`p-8 rounded-2xl border flex flex-col h-full ${
                 plan.popular
                   ? "bg-accent/5 border-accent shadow-xl shadow-accent/20"
                   : "bg-card border-border"
               } relative`}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-accent rounded-full text-sm font-medium">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-accent text-white text-center rounded-full text-sm font-medium">
                   {t.pricing.plans.mostPopular}
                 </div>
               )}
 
-              <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-              <div className="text-4xl font-bold text-accent mb-2">{plan.price}</div>
-              {plan.period && (
-                <div className="text-sm text-foreground/60 mb-2">{plan.period}</div>
-              )}
+              <h3 className="text-2xl font-bold mb-2 min-h-[3.5rem]">{plan.name}</h3>
+              <div className="min-h-[4.5rem] mb-2">
+                <div className="text-4xl font-bold text-accent">{plan.price}</div>
+                {plan.period ? (
+                  <div className="text-sm text-foreground/60">{plan.period}</div>
+                ) : (
+                  <div className="h-5" aria-hidden="true" />
+                )}
+              </div>
               <p className="text-sm text-foreground/60 mb-6">{plan.description}</p>
 
               <ul className="space-y-3 mb-8">
@@ -205,14 +209,16 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              <Button
-                onClick={() => handlePurchase(plan.id)}
-                loading={loading === plan.id}
-                variant={plan.popular ? "primary" : "secondary"}
-                className="w-full"
-              >
-                {user ? t.pricing.purchase : t.pricing.signInToPurchase}
-              </Button>
+              <div className="mt-auto">
+                <Button
+                  onClick={() => handlePurchase(plan.id)}
+                  loading={loading === plan.id}
+                  variant={plan.popular ? "primary" : "secondary"}
+                  className="w-full"
+                >
+                  {user ? t.pricing.purchase : t.pricing.signInToPurchase}
+                </Button>
+              </div>
             </motion.div>
           ))}
         </div>
