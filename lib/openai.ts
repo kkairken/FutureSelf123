@@ -26,6 +26,8 @@ interface ChapterInput {
   language?: string;
   previousContent?: string;
   chapterNumber?: number;
+  storySummary?: string;
+  lastChapterSummary?: string;
 }
 
 const languageInstructions: Record<string, string> = {
@@ -107,21 +109,27 @@ Key principles:
 - Keep the same tone: ${input.tone}
 - Embody the archetype: ${input.archetype}
 - Do not repeat the previous content; move the story forward
+- Introduce a new scene and a new external event
+- Include a clear internal decision and its consequence
 - End with a strong, memorable line
 `;
 
   const userPrompt = `Continue the story as Chapter ${chapterNumber}.
 
-STORY CONTEXT (do not repeat verbatim, continue from here):
-${input.previousContent || ""}
+STORY SUMMARY (do not repeat verbatim):
+${input.storySummary || "No prior summary available."}
 
-BACKSTORY (keep consistent):
-Current reality: ${input.currentLife}
-Key past events: ${input.pastEvents}
-Fears and limitations: ${input.fears}
+LAST CHAPTER SUMMARY:
+${input.lastChapterSummary || input.previousContent?.slice(0, 800) || "No last chapter summary available."}
+
+ANCHORS (keep consistent, do not restate):
+Name: ${input.name}
 Future vision: ${input.futureVision}
+Archetype: ${input.archetype}
+Tone: ${input.tone}
 
 Write 900-1100 words in the same voice and style. First person, present tense, already achieved.
+Avoid rehashing the original inputs. Move the story forward with new, logical developments.
 
 ${langInstruction}`;
 
@@ -136,6 +144,69 @@ ${langInstruction}`;
   });
 
   return completion.choices[0].message.content || "";
+}
+
+interface SummaryInput {
+  chapterContent: string;
+  previousSummary?: string;
+  language?: string;
+}
+
+export async function generateStorySummary(input: SummaryInput): Promise<{
+  storySummary: string;
+  lastChapterSummary: string;
+}> {
+  const openai = getOpenAIClient();
+  const lang = input.language || "en";
+  const langInstruction = languageInstructions[lang] || languageInstructions["en"];
+
+  const systemPrompt = `You are a story editor. Summarize the story so far and the last chapter.
+${langInstruction}
+Return a compact summary that preserves plot continuity and character growth.
+Keep the story summary to 5-8 bullets. Keep last chapter summary to 2-3 sentences.
+Use the exact format below.`;
+
+  const userPrompt = `PREVIOUS STORY SUMMARY:
+${input.previousSummary || "None yet."}
+
+NEW CHAPTER:
+${input.chapterContent}
+
+FORMAT:
+STORY_SUMMARY:
+- bullet 1
+- bullet 2
+LAST_CHAPTER_SUMMARY:
+Two or three sentences.`;
+
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ],
+    temperature: 0.3,
+    max_tokens: 400,
+  });
+
+  const text = completion.choices[0].message.content || "";
+  const storyMarker = "STORY_SUMMARY:";
+  const lastMarker = "LAST_CHAPTER_SUMMARY:";
+
+  const storyIndex = text.indexOf(storyMarker);
+  const lastIndex = text.indexOf(lastMarker);
+
+  if (storyIndex === -1 || lastIndex === -1 || lastIndex <= storyIndex) {
+    return {
+      storySummary: text.trim(),
+      lastChapterSummary: "",
+    };
+  }
+
+  const storySummary = text.slice(storyIndex + storyMarker.length, lastIndex).trim();
+  const lastChapterSummary = text.slice(lastIndex + lastMarker.length).trim();
+
+  return { storySummary, lastChapterSummary };
 }
 
 export const ARCHETYPES = [

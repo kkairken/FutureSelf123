@@ -42,6 +42,8 @@ model Book {
   archetype   String
   tone        String
   language    String   @default("en") // en, ru, kz
+  summary     String?  @db.Text
+  lastChapterSummary String? @db.Text
 
   chapters    Chapter[]
 

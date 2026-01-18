@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getUserFromToken } from "@/lib/auth";
-import { generateChapter } from "@/lib/openai";
+import { generateChapter, generateStorySummary } from "@/lib/openai";
 
 
 export const dynamic = 'force-dynamic';
@@ -106,6 +106,24 @@ export async function POST(request: Request) {
         status: "completed",
       },
     });
+
+    try {
+      const summary = await generateStorySummary({
+        chapterContent: content,
+        previousSummary: book.summary || "",
+        language: book.language,
+      });
+
+      await prisma.book.update({
+        where: { id: bookId },
+        data: {
+          summary: summary.storySummary,
+          lastChapterSummary: summary.lastChapterSummary,
+        },
+      });
+    } catch (summaryError) {
+      console.warn("Summary update failed:", summaryError);
+    }
 
     return NextResponse.json({ success: true, chapterId: chapter.id, bookId });
   } catch (error) {

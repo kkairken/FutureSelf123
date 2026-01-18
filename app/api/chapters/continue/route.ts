@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getUserFromToken } from "@/lib/auth";
-import { generateChapterContinuation } from "@/lib/openai";
+import { generateChapterContinuation, generateStorySummary } from "@/lib/openai";
 
 export const runtime = "edge";
 
@@ -81,6 +81,8 @@ export async function POST(request: Request) {
       tone: book.tone,
       language: book.language,
       previousContent: lastChapter?.content || "",
+      storySummary: book.summary || "",
+      lastChapterSummary: book.lastChapterSummary || "",
       chapterNumber: nextNumber,
     });
 
@@ -91,6 +93,24 @@ export async function POST(request: Request) {
         status: "completed",
       },
     });
+
+    try {
+      const summary = await generateStorySummary({
+        chapterContent: content,
+        previousSummary: book.summary || "",
+        language: book.language,
+      });
+
+      await prisma.book.update({
+        where: { id: book.id },
+        data: {
+          summary: summary.storySummary,
+          lastChapterSummary: summary.lastChapterSummary,
+        },
+      });
+    } catch (summaryError) {
+      console.warn("Summary update failed:", summaryError);
+    }
 
     return NextResponse.json({ success: true, chapterId: chapter.id });
   } catch (error) {
