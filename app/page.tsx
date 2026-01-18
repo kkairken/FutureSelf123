@@ -51,12 +51,7 @@ export default function HomePage() {
 
           <div className="flex gap-4 justify-center">
             <Link href="/create">
-              <Button
-                size="lg"
-                className="bg-white text-foreground hover:bg-white/90 dark:bg-accent dark:text-white dark:hover:bg-accent-dark"
-              >
-                {t.home.cta.create}
-              </Button>
+              <Button size="lg">{t.home.cta.create}</Button>
             </Link>
             <Link href="/how-it-works">
               <Button size="lg" variant="secondary">
@@ -181,7 +176,12 @@ export default function HomePage() {
 
           <div className="mt-12">
             <Link href="/create">
-              <Button size="lg">{t.home.pricing.startNow}</Button>
+              <Button
+                size="lg"
+                className="bg-accent text-white hover:bg-accent-dark"
+              >
+                {t.home.pricing.startNow}
+              </Button>
             </Link>
           </div>
         </motion.div>
