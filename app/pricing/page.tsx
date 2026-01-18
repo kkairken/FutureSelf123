@@ -1,70 +1,86 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/Button";
 import { toast } from "@/components/Toaster";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { formatString } from "@/lib/i18n/format";
 
 export default function PricingPage() {
   const router = useRouter();
   const { t } = useLanguage();
+  const [currency, setCurrency] = useState<"KZT" | "USD" | "EUR">("KZT");
   const [loading, setLoading] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
 
-  const plans = [
-    {
-      id: "1_chapter",
-      name: t.pricing.plans.single,
-      price: "$7",
-      credits: 1,
-      description: t.pricing.plans.singleDesc,
-      features: [
-        `1 ${t.pricing.features.chapters}`,
-        t.pricing.features.length,
-        t.pricing.features.customize,
-      ],
-    },
-    {
-      id: "5_chapters",
-      name: t.pricing.plans.starter,
-      price: "$29",
-      credits: 5,
-      description: t.pricing.plans.starterDesc,
-      features: [
-        `5 ${t.pricing.features.chapters}`,
-        formatString(t.pricing.features.save, { percent: 17 }),
-        t.pricing.features.multiple,
-      ],
-      popular: true,
-    },
-    {
-      id: "10_chapters",
-      name: t.pricing.plans.bundle,
-      price: "$49",
-      credits: 10,
-      description: t.pricing.plans.bundleDesc,
-      features: [
-        `10 ${t.pricing.features.chapters}`,
-        formatString(t.pricing.features.save, { percent: 30 }),
-        t.pricing.features.journey,
-      ],
-    },
-    {
-      id: "subscription",
-      name: t.pricing.plans.subscription,
-      price: "$19/mo",
-      credits: 3,
-      description: t.pricing.plans.subscriptionDesc,
-      features: [
-        `3 ${t.pricing.features.chapters}${t.home.pricing.perMonth}`,
-        t.pricing.features.cancel,
-        t.pricing.features.consistent,
-      ],
-    },
-  ];
+  const rateMap = {
+    KZT: 1,
+    USD: 1 / 470,
+    EUR: 1 / 510,
+  };
+
+  const roundingMap = {
+    KZT: 10,
+    USD: 1,
+    EUR: 1,
+  };
+
+  const currencySymbol = {
+    KZT: "₸",
+    USD: "$",
+    EUR: "€",
+  };
+
+  const formatPrice = (kzt: number) => {
+    const converted = kzt * rateMap[currency];
+    const step = roundingMap[currency];
+    const rounded = Math.ceil(converted / step) * step;
+    return `${currencySymbol[currency]}${rounded.toLocaleString()}`;
+  };
+
+  const plans = useMemo(
+    () => [
+      {
+        id: "1_chapter",
+        name: t.pricing.plans.single,
+        price: formatPrice(1000),
+        credits: 7,
+        description: t.pricing.plans.singleDesc,
+        features: [
+          `7 ${t.pricing.features.chapters}`,
+          t.pricing.features.length,
+          t.pricing.features.customize,
+        ],
+      },
+      {
+        id: "5_chapters",
+        name: t.pricing.plans.starter,
+        price: formatPrice(2000),
+        credits: 20,
+        description: t.pricing.plans.starterDesc,
+        features: [
+          `20 ${t.pricing.features.chapters}`,
+          t.pricing.features.consistent,
+          t.pricing.features.multiple,
+        ],
+        popular: true,
+      },
+      {
+        id: "10_chapters",
+        name: t.pricing.plans.bundle,
+        price: formatPrice(5000),
+        credits: 40,
+        description: t.pricing.plans.bundleDesc,
+        features: [
+          `40 ${t.pricing.features.chapters}`,
+          t.pricing.features.journey,
+          t.pricing.features.consistent,
+        ],
+      },
+    ],
+    [currency, t]
+  );
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
@@ -124,9 +140,21 @@ export default function PricingPage() {
         >
           <h1 className="text-5xl font-bold mb-4">{t.pricing.title}</h1>
           <p className="text-xl text-foreground/70">{t.pricing.subtitle}</p>
+          <div className="mt-6 flex justify-center gap-2">
+            {(["KZT", "USD", "EUR"] as const).map((code) => (
+              <Button
+                key={code}
+                size="sm"
+                variant={currency === code ? "primary" : "secondary"}
+                onClick={() => setCurrency(code)}
+              >
+                {code}
+              </Button>
+            ))}
+          </div>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.id}
@@ -178,6 +206,7 @@ export default function PricingPage() {
         >
           <p>{t.pricing.securePayment}</p>
           <p className="mt-2">{t.pricing.creditsNeverExpire}</p>
+          <p className="mt-2">{t.pricing.roundingNotice}</p>
         </motion.div>
       </div>
     </div>

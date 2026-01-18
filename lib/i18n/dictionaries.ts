@@ -206,6 +206,7 @@ export type Dictionary = {
     signInToPurchase: string;
     securePayment: string;
     creditsNeverExpire: string;
+    roundingNotice: string;
   };
   privacy: {
     title: string;
@@ -521,12 +522,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       title: "Choose Your Path",
       subtitle: "Invest in your transformation. Start creating your future identity.",
       plans: {
-        single: "Single Chapter",
-        singleDesc: "Perfect for trying it out",
-        starter: "Starter Pack",
-        starterDesc: "Best for exploring different angles",
-        bundle: "Transformation Bundle",
-        bundleDesc: "For serious identity work",
+        single: "7 Chapters",
+        singleDesc: "Start your transformation story",
+        starter: "20 Chapters",
+        starterDesc: "Best for steady progress",
+        bundle: "40 Chapters",
+        bundleDesc: "For deep, long-term work",
         subscription: "Monthly Subscription",
         subscriptionDesc: "Ongoing transformation",
         mostPopular: "Most Popular",
@@ -543,8 +544,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
       },
       purchase: "Purchase",
       signInToPurchase: "Sign In to Purchase",
-      securePayment: "Secure payment powered by Stripe",
+      securePayment: "Secure payment powered by Freedom Pay",
       creditsNeverExpire: "Credits never expire",
+      roundingNotice: "Prices are converted in real time and rounded up.",
     },
     privacy: {
       title: "Privacy Policy",
@@ -891,12 +893,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       title: "Выбери свой путь",
       subtitle: "Инвестируй в трансформацию. Начни создавать будущую идентичность.",
       plans: {
-        single: "Одна глава",
-        singleDesc: "Идеально, чтобы попробовать",
-        starter: "Стартовый пакет",
-        starterDesc: "Для исследования разных углов",
-        bundle: "Пакет трансформации",
-        bundleDesc: "Для серьёзной работы с идентичностью",
+        single: "7 глав",
+        singleDesc: "Старт твоей истории трансформации",
+        starter: "20 глав",
+        starterDesc: "Лучший выбор для регулярного прогресса",
+        bundle: "40 глав",
+        bundleDesc: "Для глубокой и долгой работы",
         subscription: "Месячная подписка",
         subscriptionDesc: "Постоянная трансформация",
         mostPopular: "Самый популярный",
@@ -913,8 +915,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
       },
       purchase: "Купить",
       signInToPurchase: "Войти для покупки",
-      securePayment: "Безопасная оплата через Stripe",
+      securePayment: "Безопасная оплата через Freedom Pay",
       creditsNeverExpire: "Кредиты никогда не истекают",
+      roundingNotice: "Цены конвертируются в реальном времени и округляются вверх.",
     },
     privacy: {
       title: "Политика конфиденциальности",
@@ -1261,12 +1264,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       title: "Жолыңды таңда",
       subtitle: "Өзгерісіңе инвестиция сал. Болашақ идентификацияңды жасауды бастау.",
       plans: {
-        single: "Бір тарау",
-        singleDesc: "Көру үшін өте жақсы",
-        starter: "Бастапқы жиынтық",
-        starterDesc: "Әртүрлі бұрыштарды зерттеу үшін",
-        bundle: "Өзгеріс жиынтығы",
-        bundleDesc: "Идентификация жұмысы үшін",
+        single: "7 тарау",
+        singleDesc: "Өзгеру тарихын бастау",
+        starter: "20 тарау",
+        starterDesc: "Тұрақты прогресс үшін ең жақсы",
+        bundle: "40 тарау",
+        bundleDesc: "Терең және ұзақ жұмыс үшін",
         subscription: "Айлық жазылым",
         subscriptionDesc: "Үздіксіз өзгеріс",
         mostPopular: "Ең танымал",
@@ -1283,8 +1286,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
       },
       purchase: "Сатып алу",
       signInToPurchase: "Сатып алу үшін кіру",
-      securePayment: "Stripe арқылы қауіпсіз төлем",
+      securePayment: "Freedom Pay арқылы қауіпсіз төлем",
       creditsNeverExpire: "Кредиттер ешқашан мерзімі өтпейді",
+      roundingNotice: "Бағалар нақты уақытта конвертацияланып, жоғарыға дөңгелектеледі.",
     },
     privacy: {
       title: "Құпиялық саясаты",

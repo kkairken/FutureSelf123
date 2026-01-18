@@ -16,24 +16,19 @@ export function getStripeClient() {
 
 export const PRICING = {
   "1_chapter": {
-    credits: 1,
-    price: 700, // $7.00 in cents
-    name: "1 Chapter",
+    credits: 7,
+    price: 1000, // KZT
+    name: "7 Chapters",
   },
   "5_chapters": {
-    credits: 5,
-    price: 2900, // $29.00
-    name: "5 Chapters",
+    credits: 20,
+    price: 2000, // KZT
+    name: "20 Chapters",
   },
   "10_chapters": {
-    credits: 10,
-    price: 4900, // $49.00
-    name: "10 Chapters",
-  },
-  subscription: {
-    credits: 3, // per month
-    price: 1900, // $19.00/month
-    name: "Monthly Subscription",
+    credits: 40,
+    price: 5000, // KZT
+    name: "40 Chapters",
   },
 };
 

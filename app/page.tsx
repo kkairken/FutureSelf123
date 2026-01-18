@@ -9,10 +9,9 @@ export default function HomePage() {
   const { t } = useLanguage();
 
   const plans = [
-    { name: t.home.pricing.single, price: "$7", credits: 1 },
-    { name: t.home.pricing.starter, price: "$29", credits: 5 },
-    { name: t.home.pricing.committed, price: "$49", credits: 10 },
-    { name: t.home.pricing.monthly, price: "$19/mo", credits: 3, perMonth: true },
+    { name: t.pricing.plans.single, price: "₸1,000", credits: 7 },
+    { name: t.pricing.plans.starter, price: "₸2,000", credits: 20 },
+    { name: t.pricing.plans.bundle, price: "₸5,000", credits: 40 },
   ];
 
   const creditLabel = (count: number, perMonth?: boolean) => {
