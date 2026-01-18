@@ -54,7 +54,7 @@ export async function createCheckoutSession(
             description: `${product.credits} chapter${product.credits > 1 ? "s" : ""}`,
           },
           unit_amount: product.price,
-          ...(productType === "subscription" && { recurring: { interval: "month" } }),
+          // No subscriptions in current pricing.
         },
         quantity: 1,
       },
