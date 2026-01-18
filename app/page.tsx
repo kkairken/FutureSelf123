@@ -160,7 +160,7 @@ export default function HomePage() {
                 <h3 className="font-bold text-lg mb-2">{plan.name}</h3>
                 <div className="text-3xl font-bold text-accent mb-2">{plan.price}</div>
                 <p className="text-sm text-foreground/60">
-                  {creditLabel(plan.credits, plan.perMonth)}
+                  {creditLabel(plan.credits)}
                 </p>
               </motion.div>
             ))}
