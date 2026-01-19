@@ -302,10 +302,10 @@ export async function initPayment(
   }
 
   // Calculate signature
-  const pg_sig = buildSig("init_payment.php", requestParams, config.secretKey);
+  const pg_sig = buildSig("init_payment", requestParams, config.secretKey);
   const payload = { ...requestParams, pg_sig };
 
-  return postForm(config.baseUrl, "init_payment.php", payload);
+  return postForm(config.baseUrl, "init_payment", payload);
 }
 
 // =============================================================================
