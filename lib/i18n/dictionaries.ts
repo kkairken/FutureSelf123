@@ -96,15 +96,16 @@ export type Dictionary = {
     needCredits: string;
   };
   auth: {
-    signIn: {
-      title: string;
-      subtitle: string;
-      email: string;
-      emailPlaceholder: string;
-      sendLink: string;
-      checkEmail: string;
-      clickLink: string;
-    };
+      signIn: {
+        title: string;
+        subtitle: string;
+        email: string;
+        emailPlaceholder: string;
+        sendLink: string;
+        checkEmail: string;
+        clickLink: string;
+        checkSpam: string;
+      };
       verify: {
         verifying: string;
         success: string;
