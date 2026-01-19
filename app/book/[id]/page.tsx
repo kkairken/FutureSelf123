@@ -68,6 +68,21 @@ export default function BookPage() {
   }, [continuing]);
 
   const handleContinue = async (note?: string) => {
+    try {
+      const token = localStorage.getItem("auth_token");
+      const userRes = await fetch("/api/auth/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const userData = await userRes.json();
+      if (!userData.user || userData.user.credits < 1) {
+        router.push("/pricing");
+        return;
+      }
+    } catch {
+      router.push("/pricing");
+      return;
+    }
+
     setContinuing(true);
     try {
       const token = localStorage.getItem("auth_token");
