@@ -9,24 +9,43 @@
  * 4. (Optional) Add domain for production emails
  */
 
-export async function sendMagicLinkEmail(email: string, token: string) {
+export async function sendMagicLinkEmail(
+  email: string,
+  token: string,
+  locale: "en" | "ru" | "kz" = "en"
+) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const magicLink = `${appUrl}/auth/verify?token=${token}`;
 
   // Определяем язык из email или используем английский по умолчанию
-  const getEmailContent = () => {
-    // Можно определять язык из базы данных пользователя, но для простоты используем English
-    return {
+  const contentByLocale = {
+    en: {
       subject: "Sign in to Future Self",
       heading: "Your Magic Link",
       text: "Click the button below to sign in to your account. This link will expire in 15 minutes.",
       button: "Sign In to Future Self",
       linkText: "Or copy this link:",
       footer: "If you didn't request this email, you can safely ignore it.",
-    };
+    },
+    ru: {
+      subject: "Вход в Future Self",
+      heading: "Ваша ссылка для входа",
+      text: "Нажмите кнопку ниже, чтобы войти в аккаунт. Ссылка действует 15 минут.",
+      button: "Войти в Future Self",
+      linkText: "Или скопируйте ссылку:",
+      footer: "Если вы не запрашивали письмо, просто проигнорируйте его.",
+    },
+    kz: {
+      subject: "Future Self жүйесіне кіру",
+      heading: "Кіру сілтемесі",
+      text: "Кіру үшін төмендегі батырманы басыңыз. Сілтеме 15 минутқа жарамды.",
+      button: "Future Self жүйесіне кіру",
+      linkText: "Немесе осы сілтемені көшіріңіз:",
+      footer: "Егер бұл хатты сіз сұрамаған болсаңыз, оны елемей-ақ қойыңыз.",
+    },
   };
 
-  const content = getEmailContent();
+  const content = contentByLocale[locale] || contentByLocale.en;
 
   const html = `
     <!DOCTYPE html>

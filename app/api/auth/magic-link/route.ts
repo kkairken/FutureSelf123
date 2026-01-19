@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
     // Generate and send magic link
     const token = await generateMagicLink(email);
-    await sendMagicLinkEmail(email, token);
+    await sendMagicLinkEmail(email, token, (user.language as any) || "en");
 
     return NextResponse.json({ success: true });
   } catch (error) {
