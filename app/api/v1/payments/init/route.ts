@@ -52,40 +52,32 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "FreedomPay not configured" }, { status: 500 });
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const pg_result_url =
-      process.env.FREEDOMPAY_RESULT_URL || `${appUrl}/api/v1/payments/freedompay/result`;
-    const pg_check_url =
-      process.env.FREEDOMPAY_CHECK_URL || `${appUrl}/api/v1/payments/freedompay/check`;
-
     const pg_salt = randomSalt();
 
-    // Параметры для FreedomPay API (участвуют в подписи)
+    // URL для колбеков FreedomPay
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const pg_result_url = process.env.FREEDOMPAY_RESULT_URL || `${appUrl}/api/v1/payments/freedompay/result`;
+    const pg_check_url = process.env.FREEDOMPAY_CHECK_URL || `${appUrl}/api/v1/payments/freedompay/check`;
+
+    // Параметры для FreedomPay API
+    // Все параметры участвуют в подписи (сортируются по алфавиту)
     const paymentParams = normalizeParams({
+      pg_amount: String(Math.round(amount)),
+      pg_check_url,
+      pg_description: description,
       pg_merchant_id: merchantId,
       pg_order_id: reservationId,
-      pg_amount: amount.toFixed(2),
-      pg_currency: "KZT",
-      pg_description: description,
       pg_result_url,
-      pg_check_url,
       pg_salt,
-      // Опционально: если нужны recurring платежи
-      ...(body.pg_recurring_start && { pg_recurring_start: body.pg_recurring_start }),
-      ...(body.pg_recurring_lifetime && { pg_recurring_lifetime: body.pg_recurring_lifetime }),
-      // Опционально: URL для редиректов (если поддерживаются FreedomPay)
-      ...(successUrl && { pg_success_url: successUrl }),
-      ...(failureUrl && { pg_failure_url: failureUrl }),
     });
 
     const pg_sig = buildSig("init_payment.php", paymentParams, secretKey);
     const payload = { ...paymentParams, pg_sig };
 
+    // Логирование для отладки
     console.log("FreedomPay init request:", {
       url: `${baseUrl}/init_payment.php`,
-      params: Object.keys(payload),
-      pg_order_id: payload.pg_order_id,
-      pg_amount: payload.pg_amount,
+      payload,
     });
 
     const response = await postForm(baseUrl, "init_payment.php", payload);

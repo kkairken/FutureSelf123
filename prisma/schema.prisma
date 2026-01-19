@@ -23,7 +23,7 @@ model User {
   books     Book[]
   payments  Payment[]
   magicLinks MagicLink[]
-  subscriptions Subscription[]
+  recurringProfiles RecurringProfile[]
 
   @@index([email])
 }
@@ -89,19 +89,40 @@ model Payment {
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   amount          Int      // в центах
-  currency        String   @default("usd")
+  currency        String   @default("KZT")
   status          String   // pending, completed, failed
-  stripeSessionId String?  @unique
-  stripePaymentId String?
 
   productType     String   // 1_chapter, 5_chapters, 10_chapters, subscription
   creditsAdded    Int      @default(0)
+  provider        String   @default("freedompay")
+  pgOrderId       String?
+  pgPaymentId     String?
+  pgRecurringProfile String?
+  rawPayload      Json?
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   @@index([userId])
-  @@index([stripeSessionId])
+  @@index([pgOrderId])
+  @@index([pgPaymentId])
+}
+
+model RecurringProfile {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  provider      String   @default("freedompay")
+  profileId     String   @unique
+  status        String   @default("active") // active, expired, canceled
+  expiresAt     DateTime?
+  lastPaymentId String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model MagicLink {
@@ -118,21 +139,4 @@ model MagicLink {
 
   @@index([token])
   @@index([email])
-}
-
-model Subscription {
-  id                 String   @id @default(cuid())
-  userId             String
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  stripeSubscriptionId String  @unique
-  stripePriceId      String
-  status             String   // active, canceled, past_due
-  currentPeriodEnd   DateTime
-
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-
-  @@index([userId])
-  @@index([stripeSubscriptionId])
 }

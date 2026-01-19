@@ -26,6 +26,13 @@ export default function PricingPage() {
     EUR: Number(process.env.NEXT_PUBLIC_ROUND_EUR) || 1,
   };
 
+  const basePriceMap = {
+    "1_chapter": Number(process.env.NEXT_PUBLIC_PRICE_7_KZT) || 1000,
+    "5_chapters": Number(process.env.NEXT_PUBLIC_PRICE_20_KZT) || 2000,
+    "10_chapters": Number(process.env.NEXT_PUBLIC_PRICE_40_KZT) || 5000,
+    "subscription_100": Number(process.env.NEXT_PUBLIC_PRICE_100_KZT) || 6000,
+  };
+
   const currencySymbol = {
     KZT: "₸",
     USD: "$",
@@ -44,7 +51,8 @@ export default function PricingPage() {
       {
         id: "1_chapter",
         name: t.pricing.plans.single,
-        price: formatPrice(Number(process.env.NEXT_PUBLIC_PRICE_7_KZT) || 1000),
+        amountKzt: basePriceMap["1_chapter"],
+        price: formatPrice(basePriceMap["1_chapter"]),
         credits: 7,
         period: "",
         description: t.pricing.plans.singleDesc,
@@ -57,7 +65,8 @@ export default function PricingPage() {
       {
         id: "5_chapters",
         name: t.pricing.plans.starter,
-        price: formatPrice(Number(process.env.NEXT_PUBLIC_PRICE_20_KZT) || 2000),
+        amountKzt: basePriceMap["5_chapters"],
+        price: formatPrice(basePriceMap["5_chapters"]),
         credits: 20,
         period: "",
         description: t.pricing.plans.starterDesc,
@@ -71,7 +80,8 @@ export default function PricingPage() {
       {
         id: "10_chapters",
         name: t.pricing.plans.bundle,
-        price: formatPrice(Number(process.env.NEXT_PUBLIC_PRICE_40_KZT) || 5000),
+        amountKzt: basePriceMap["10_chapters"],
+        price: formatPrice(basePriceMap["10_chapters"]),
         credits: 40,
         period: "",
         description: t.pricing.plans.bundleDesc,
@@ -84,7 +94,8 @@ export default function PricingPage() {
       {
         id: "subscription_100",
         name: t.pricing.plans.subscription,
-        price: formatPrice(Number(process.env.NEXT_PUBLIC_PRICE_100_KZT) || 6000),
+        amountKzt: basePriceMap["subscription_100"],
+        price: formatPrice(basePriceMap["subscription_100"]),
         credits: 100,
         period: t.home.pricing.perMonth,
         description: t.pricing.plans.subscriptionDesc,
@@ -96,6 +107,11 @@ export default function PricingPage() {
       },
     ],
     [currency, t]
+  );
+
+  const planById = useMemo(
+    () => new Map(plans.map((plan) => [plan.id, plan])),
+    [plans]
   );
 
   useEffect(() => {
@@ -119,23 +135,40 @@ export default function PricingPage() {
       return;
     }
 
+    const plan = planById.get(productType);
+    if (!plan) {
+      toast.error(t.common.error);
+      return;
+    }
+
     setLoading(productType);
 
     try {
       const token = localStorage.getItem("auth_token");
-      const res = await fetch("/api/stripe/create-checkout", {
+      const reservationId = `${Date.now()}${Math.floor(Math.random() * 1000)
+        .toString()
+        .padStart(3, "0")}`;
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      const res = await fetch("/api/v1/payments/init", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ productType }),
+        body: JSON.stringify({
+          reservation_id: reservationId,
+          amount: plan.amountKzt,
+          description: `${t.pricing.title}: ${plan.name}`,
+          success_url: `${appUrl}/payment/success?status=success`,
+          failure_url: `${appUrl}/payment/success?status=failed`,
+          product_type: productType,
+        }),
       });
 
       const data = await res.json();
 
-      if (res.ok && data.url) {
-        window.location.href = data.url;
+      if (res.ok && data.redirect_url) {
+        window.location.href = data.redirect_url;
       } else {
         toast.error(data.error || t.common.error);
       }

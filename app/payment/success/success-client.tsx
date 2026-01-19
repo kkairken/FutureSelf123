@@ -14,31 +14,15 @@ export default function PaymentSuccessClient() {
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
 
   useEffect(() => {
-    const sessionId = searchParams.get("session_id");
-
-    if (!sessionId) {
+    const statusParam = searchParams.get("status");
+    if (statusParam === "failed") {
       setStatus("error");
       return;
     }
 
-    fetch("/api/stripe/success", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionId }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setStatus("success");
-          toast.success(t.payment.successTitle);
-        } else {
-          setStatus("error");
-        }
-      })
-      .catch(() => {
-        setStatus("error");
-      });
-  }, [searchParams]);
+    setStatus("success");
+    toast.success(t.payment.successTitle);
+  }, [searchParams, t.payment.successTitle]);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">

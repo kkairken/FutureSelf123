@@ -575,7 +575,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       sections: {
         dataCollection: {
           title: "Data Collection",
-          body: "We collect only the information necessary to provide our service: your email address, the content you provide for chapter generation, and payment information processed securely through Stripe.",
+          body: "We collect only the information necessary to provide our service: your email address, the content you provide for chapter generation, and payment information processed securely through Freedom Pay.",
         },
         dataUsage: {
           title: "Data Usage",
@@ -608,7 +608,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         },
         credits: {
           title: "Credits and Payments",
-          body: "Credits are used to generate chapters. Credits never expire. All payments are processed securely through Stripe. Refunds are considered on a case-by-case basis.",
+          body: "Credits are used to generate chapters. Credits never expire. All payments are processed securely through Freedom Pay. Refunds are considered on a case-by-case basis.",
         },
         ownership: {
           title: "Content Ownership",
@@ -957,7 +957,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       sections: {
         dataCollection: {
           title: "Сбор данных",
-          body: "Мы собираем только информацию, необходимую для предоставления сервиса: ваш email, контент для генерации главы и платежные данные, безопасно обрабатываемые через Stripe.",
+          body: "Мы собираем только информацию, необходимую для предоставления сервиса: ваш email, контент для генерации главы и платежные данные, безопасно обрабатываемые через Freedom Pay.",
         },
         dataUsage: {
           title: "Использование данных",
@@ -990,7 +990,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         },
         credits: {
           title: "Кредиты и платежи",
-          body: "Кредиты используются для генерации глав. Кредиты не имеют срока давности. Все платежи безопасно обрабатываются через Stripe. Возвраты рассматриваются индивидуально.",
+          body: "Кредиты используются для генерации глав. Кредиты не имеют срока давности. Все платежи безопасно обрабатываются через Freedom Pay. Возвраты рассматриваются индивидуально.",
         },
         ownership: {
           title: "Права на контент",
@@ -1339,7 +1339,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       sections: {
         dataCollection: {
           title: "Деректерді жинау",
-          body: "Біз қызмет көрсету үшін қажет ақпаратты ғана жинаймыз: email, тарау генерациясына берілген контент және Stripe арқылы қауіпсіз өңделетін төлем деректері.",
+          body: "Біз қызмет көрсету үшін қажет ақпаратты ғана жинаймыз: email, тарау генерациясына берілген контент және Freedom Pay арқылы қауіпсіз өңделетін төлем деректері.",
         },
         dataUsage: {
           title: "Деректерді пайдалану",
@@ -1372,7 +1372,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         },
         credits: {
           title: "Кредиттер және төлемдер",
-          body: "Кредиттер тарауларды жасау үшін қолданылады. Кредиттердің мерзімі аяқталмайды. Барлық төлемдер Stripe арқылы қауіпсіз өңделеді. Қайтарымдар жеке қарастырылады.",
+          body: "Кредиттер тарауларды жасау үшін қолданылады. Кредиттердің мерзімі аяқталмайды. Барлық төлемдер Freedom Pay арқылы қауіпсіз өңделеді. Қайтарымдар жеке қарастырылады.",
         },
         ownership: {
           title: "Контентке меншік құқығы",
