@@ -62,28 +62,40 @@ export async function POST(request: Request) {
     const merchantId = process.env.FREEDOMPAY_MERCHANT_ID;
     const secretKey = process.env.FREEDOMPAY_SECRET_KEY;
     const baseUrl = process.env.FREEDOMPAY_GATEWAY_BASE || "https://api.freedompay.kz";
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     if (!merchantId || !secretKey) {
       return NextResponse.json({ error: "FreedomPay not configured" }, { status: 500 });
     }
 
     const pg_salt = randomSalt();
+    const pg_result_url = `${appUrl}/api/v1/payments/freedompay/result`;
+    const pg_success_url = `${appUrl}/payment/success?status=success`;
+    const pg_failure_url = `${appUrl}/payment/success?status=failed`;
     const productName = PRODUCT_NAMES[productType]?.[language] || PRODUCT_NAMES[productType]?.en || productType;
+
+    // Generate unique order ID
+    const pg_order_id = `${Date.now()}${Math.floor(Math.random() * 1000).toString().padStart(3, "0")}`;
 
     // FreedomPay language code mapping
     const pgLanguage = language === "kz" ? "kz" : language === "ru" ? "ru" : "en";
 
-    // Parameters for payment.php (sorted alphabetically for signature)
+    // Parameters for payment.php
+    // Custom parameters (without pg_ prefix) will be passed to check_url and result_url
     const params: Record<string, string> = {
       pg_amount: String(product.amount),
       pg_currency: "KZT",
       pg_description: productName,
+      pg_failure_url,
       pg_language: pgLanguage,
       pg_merchant_id: merchantId,
+      pg_order_id,
+      pg_result_url,
       pg_salt,
-      // Custom parameter to identify user (will be passed to result_url)
-      user_id: user.id,
+      pg_success_url,
+      // Custom parameters for callback identification
       product_type: productType,
+      user_id: user.id,
     };
 
     // Build signature
@@ -98,6 +110,8 @@ export async function POST(request: Request) {
       productType,
       amount: product.amount,
       language: pgLanguage,
+      pg_order_id,
+      paymentUrl,
     });
 
     return NextResponse.json({ payment_url: paymentUrl });
