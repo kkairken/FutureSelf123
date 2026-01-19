@@ -120,6 +120,29 @@ export default function ChapterPage() {
     );
   }
 
+  if (continuing) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center max-w-md"
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="text-6xl mb-6"
+          >
+            ✨
+          </motion.div>
+          <h1 className="text-3xl font-bold mb-4">{t.chapter.creating}</h1>
+          <p className="text-foreground/70 mb-2">{t.chapter.creatingDesc}</p>
+          <p className="text-sm text-accent">{t.chapter.timeEstimate}</p>
+        </motion.div>
+      </div>
+    );
+  }
+
   const handleContinue = async () => {
     if (!chapter.book?.id) {
       router.push("/create");
