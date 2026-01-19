@@ -1,17 +1,93 @@
+/**
+ * Payment Initialization Endpoint
+ *
+ * POST /api/v1/payments/init
+ *
+ * Supports:
+ * - One-time payments (default)
+ * - Recurring payments (subscription_100 product type)
+ *
+ * Request body:
+ * {
+ *   product_type: "1_chapter" | "5_chapters" | "10_chapters" | "subscription_100"
+ *   language?: "en" | "ru" | "kz"
+ * }
+ *
+ * Response:
+ * {
+ *   redirect_url: string  // URL to redirect user to FreedomPay payment page
+ *   pg_payment_id?: string
+ *   pg_order_id: string
+ * }
+ */
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getUserFromToken } from "@/lib/auth";
 import {
-  buildSig,
-  normalizeParams,
-  postForm,
-  randomSalt,
+  getConfig,
+  validateConfig,
+  initPayment,
+  generateOrderId,
+  getErrorDescription,
 } from "@/lib/freedompay";
 
 export const runtime = "nodejs";
 
+// =============================================================================
+// PRODUCT CONFIGURATION
+// =============================================================================
+
+interface Product {
+  amount: number;
+  credits: number;
+  isSubscription: boolean;
+  recurringLifetime?: number; // months
+}
+
+const PRODUCTS: Record<string, Product> = {
+  "1_chapter": { amount: 1000, credits: 7, isSubscription: false },
+  "5_chapters": { amount: 2000, credits: 20, isSubscription: false },
+  "10_chapters": { amount: 5000, credits: 40, isSubscription: false },
+  "subscription_100": {
+    amount: 6000,
+    credits: 100,
+    isSubscription: true,
+    recurringLifetime: 12, // 12 months
+  },
+};
+
+// Product names by language
+const PRODUCT_NAMES: Record<string, Record<string, string>> = {
+  "1_chapter": {
+    en: "7 chapters",
+    ru: "7 кредитов",
+    kz: "7 тарау",
+  },
+  "5_chapters": {
+    en: "20 chapters",
+    ru: "20 глав",
+    kz: "20 тарау",
+  },
+  "10_chapters": {
+    en: "40 chapters",
+    ru: "40 глав",
+    kz: "40 тарау",
+  },
+  "subscription_100": {
+    en: "Monthly subscription - 100 chapters",
+    ru: "Месячная подписка - 100 глав",
+    kz: "Айлық жазылым - 100 тарау",
+  },
+};
+
+// =============================================================================
+// HANDLER
+// =============================================================================
+
 export async function POST(request: Request) {
   try {
+    // 1. Authenticate user
     const authHeader = request.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -24,74 +100,127 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
+    // 2. Parse request
     const body = await request.json();
-    const reservationIdRaw = String(body.reservation_id || "").trim();
-    let reservationId = reservationIdRaw.replace(/\D/g, "");
-    if (!reservationId) {
-      reservationId = `${Date.now()}${Math.floor(Math.random() * 1000)
-        .toString()
-        .padStart(3, "0")}`;
+    const productType = String(body.product_type || "").trim();
+    const language = String(body.language || "ru").trim();
+
+    // 3. Validate product
+    const product = PRODUCTS[productType];
+    if (!product) {
+      return NextResponse.json(
+        {
+          error: "Invalid product",
+          valid_products: Object.keys(PRODUCTS),
+        },
+        { status: 400 }
+      );
     }
-    const amount = Number(body.amount);
+
+    // 4. Load and validate config
+    let config;
+    try {
+      config = getConfig();
+    } catch (error) {
+      console.error("[Payment Init] Config error:", error);
+      return NextResponse.json(
+        { error: "Payment system not configured" },
+        { status: 500 }
+      );
+    }
+
+    // Log warnings about localhost URLs
+    const warnings = validateConfig(config);
+    if (warnings.length > 0) {
+      console.warn("[Payment Init] Configuration warnings:", warnings);
+    }
+
+    // 5. Generate unique order ID
+    const orderId = generateOrderId();
+
+    // 6. Get product description
     const description =
-      String(body.description || "").trim() || `Payment for ${reservationId}`;
-    const successUrl = String(body.success_url || "").trim();
-    const failureUrl = String(body.failure_url || "").trim();
-    const productType = String(body.product_type || "freedompay").trim();
+      PRODUCT_NAMES[productType]?.[language] ||
+      PRODUCT_NAMES[productType]?.en ||
+      `Purchase: ${productType}`;
 
-    if (!Number.isFinite(amount) || amount <= 0) {
-      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
-    }
-
-    const merchantId = process.env.FREEDOMPAY_MERCHANT_ID;
-    const secretKey = process.env.FREEDOMPAY_SECRET_KEY;
-    const baseUrl =
-      process.env.FREEDOMPAY_GATEWAY_BASE || "https://api.freedompay.kz";
-
-    if (!merchantId || !secretKey) {
-      return NextResponse.json({ error: "FreedomPay not configured" }, { status: 500 });
-    }
-
-    const pg_salt = randomSalt();
-
-    // URL для колбеков FreedomPay
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const pg_result_url = process.env.FREEDOMPAY_RESULT_URL || `${appUrl}/api/v1/payments/freedompay/result`;
-    const pg_check_url = process.env.FREEDOMPAY_CHECK_URL || `${appUrl}/api/v1/payments/freedompay/check`;
-
-    // Параметры для FreedomPay API
-    // Все параметры участвуют в подписи (сортируются по алфавиту)
-    const paymentParams = normalizeParams({
-      pg_amount: String(Math.round(amount)),
-      pg_check_url,
-      pg_description: description,
-      pg_merchant_id: merchantId,
-      pg_order_id: reservationId,
-      pg_result_url,
-      pg_salt,
+    // 7. Check for existing pending payment with same parameters (idempotency)
+    const existingPayment = await prisma.payment.findFirst({
+      where: {
+        userId: user.id,
+        productType,
+        status: "pending",
+        createdAt: {
+          // Only check payments from last 30 minutes
+          gte: new Date(Date.now() - 30 * 60 * 1000),
+        },
+      },
     });
 
-    const pg_sig = buildSig("init_payment.php", paymentParams, secretKey);
-    const payload = { ...paymentParams, pg_sig };
+    if (existingPayment && existingPayment.rawPayload) {
+      const payload = existingPayment.rawPayload as Record<string, string>;
+      if (payload.pg_redirect_url) {
+        console.log("[Payment Init] Returning existing pending payment:", {
+          paymentId: existingPayment.id,
+          pgOrderId: existingPayment.pgOrderId,
+        });
+        return NextResponse.json({
+          redirect_url: payload.pg_redirect_url,
+          pg_payment_id: existingPayment.pgPaymentId,
+          pg_order_id: existingPayment.pgOrderId,
+          existing: true,
+        });
+      }
+    }
 
-    // Логирование для отладки
-    console.log("FreedomPay init request:", {
-      url: `${baseUrl}/init_payment.php`,
-      payload,
+    // 8. Initialize payment with FreedomPay
+    console.log("[Payment Init] Starting payment:", {
+      userId: user.id,
+      productType,
+      amount: product.amount,
+      isSubscription: product.isSubscription,
+      orderId,
     });
 
-    const response = await postForm(baseUrl, "init_payment.php", payload);
+    const response = await initPayment(config, {
+      orderId,
+      amount: product.amount,
+      description,
+      language,
+      userId: user.id,
+      productType,
+      recurringStart: product.isSubscription,
+      recurringLifetime: product.recurringLifetime,
+    });
+
+    // 9. Handle response
     const pg_status = response.parsed.pg_status;
+    const pg_error_code = response.parsed.pg_error_code;
+    const pg_error_description = response.parsed.pg_error_description;
 
-    if (!response.ok || pg_status !== "ok") {
-      console.error("FreedomPay init failed:", {
-        ok: response.ok,
-        status: response.status,
-        parsed: response.parsed,
+    if (pg_status !== "ok") {
+      console.error("[Payment Init] FreedomPay error:", {
+        status: pg_status,
+        errorCode: pg_error_code,
+        errorDescription: pg_error_description,
         raw: response.raw,
       });
+
+      // Provide helpful error message
+      const errorMessage = pg_error_description || getErrorDescription(pg_error_code || "0");
+
       return NextResponse.json(
-        { error: "FreedomPay init failed", details: response.parsed },
+        {
+          error: "Payment initialization failed",
+          details: {
+            code: pg_error_code,
+            message: errorMessage,
+            hint:
+              pg_error_code === "9998" || pg_error_description?.includes("null")
+                ? "Check FREEDOMPAY_MERCHANT_ID and FREEDOMPAY_SECRET_KEY in .env"
+                : undefined,
+          },
+        },
         { status: 502 }
       );
     }
@@ -99,43 +228,54 @@ export async function POST(request: Request) {
     const pg_payment_id = response.parsed.pg_payment_id;
     const redirect_url = response.parsed.pg_redirect_url;
 
-    if (redirect_url) {
-      await prisma.payment.create({
-        data: {
-          userId: user.id,
-          amount: Math.round(amount * 100),
-          currency: "KZT",
-          status: "pending",
-          productType,
-          creditsAdded: 0,
-          provider: "freedompay",
-          pgOrderId: reservationId,
-          pgPaymentId: pg_payment_id || null,
-          rawPayload: {
-            ...response.parsed,
-            // Сохраняем метаданные для внутреннего использования
-            internal_user_id: user.id,
-            internal_product_type: productType,
-            internal_success_url: successUrl,
-            internal_failure_url: failureUrl,
-          },
-        },
-      });
-
-      console.log("Payment record created:", {
-        userId: user.id,
-        pgOrderId: reservationId,
-        pgPaymentId: pg_payment_id,
-        amount,
-      });
+    if (!redirect_url) {
+      console.error("[Payment Init] No redirect URL in response:", response.parsed);
+      return NextResponse.json(
+        { error: "No redirect URL received from payment system" },
+        { status: 502 }
+      );
     }
 
+    // 10. Create payment record in database
+    const payment = await prisma.payment.create({
+      data: {
+        userId: user.id,
+        amount: Math.round(product.amount * 100), // Store in cents
+        currency: "KZT",
+        status: "pending",
+        productType,
+        creditsAdded: 0,
+        provider: "freedompay",
+        pgOrderId: orderId,
+        pgPaymentId: pg_payment_id || null,
+        rawPayload: {
+          ...response.parsed,
+          // Store metadata for callbacks
+          internal_user_id: user.id,
+          internal_product_type: productType,
+          internal_credits: product.credits,
+        },
+      },
+    });
+
+    console.log("[Payment Init] Success:", {
+      paymentId: payment.id,
+      pgOrderId: orderId,
+      pgPaymentId: pg_payment_id,
+      redirectUrl: redirect_url,
+    });
+
+    // 11. Return redirect URL
     return NextResponse.json({
-      pg_payment_id,
       redirect_url,
+      pg_payment_id,
+      pg_order_id: orderId,
     });
   } catch (error) {
-    console.error("FreedomPay init error:", error);
-    return NextResponse.json({ error: "Failed to init payment" }, { status: 500 });
+    console.error("[Payment Init] Unexpected error:", error);
+    return NextResponse.json(
+      { error: "Failed to initialize payment" },
+      { status: 500 }
+    );
   }
 }

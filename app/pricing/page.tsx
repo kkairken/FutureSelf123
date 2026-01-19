@@ -134,7 +134,7 @@ export default function PricingPage() {
 
     try {
       const token = localStorage.getItem("auth_token");
-      const res = await fetch("/api/v1/payments/link", {
+      const res = await fetch("/api/v1/payments/init", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -148,13 +148,17 @@ export default function PricingPage() {
 
       const data = await res.json();
 
-      if (res.ok && data.payment_url) {
-        window.location.href = data.payment_url;
+      if (res.ok && data.redirect_url) {
+        window.location.href = data.redirect_url;
       } else {
-        toast.error(data.error || t.common.error);
+        // Show detailed error if available
+        const errorMsg = data.details?.message || data.error || t.common.error;
+        toast.error(errorMsg);
+        console.error("Payment init failed:", data);
       }
     } catch (error) {
       toast.error(t.common.error);
+      console.error("Payment init error:", error);
     } finally {
       setLoading(null);
     }
