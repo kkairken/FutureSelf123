@@ -15,6 +15,7 @@ export default function ChapterPage() {
   const { t, locale } = useLanguage();
   const [chapter, setChapter] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [continuing, setContinuing] = useState(false);
 
   const archetypeLabels: Record<string, string> = {
     creator: t.archetypes.creator,
@@ -119,6 +120,35 @@ export default function ChapterPage() {
     );
   }
 
+  const handleContinue = async () => {
+    if (!chapter.book?.id) {
+      router.push("/create");
+      return;
+    }
+    setContinuing(true);
+    try {
+      const token = localStorage.getItem("auth_token");
+      const res = await fetch("/api/chapters/continue", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ bookId: chapter.book.id }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        router.push(`/chapter/${data.chapterId}`);
+      } else {
+        toast.error(data.error || t.common.error);
+      }
+    } catch (error) {
+      toast.error(t.common.error);
+    } finally {
+      setContinuing(false);
+    }
+  };
+
   return (
     <div className="min-h-screen py-20">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -179,7 +209,7 @@ export default function ChapterPage() {
         >
           <p className="text-foreground/70 mb-6">{t.chapter.readDaily}</p>
           <div className="flex gap-4 justify-center">
-            <Button onClick={() => router.push("/create")}>
+            <Button onClick={handleContinue} loading={continuing}>
               {t.chapter.createAnother}
             </Button>
             <Button
