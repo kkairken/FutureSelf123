@@ -231,7 +231,6 @@ export default function PricingPage() {
         >
           <p>{t.pricing.securePayment}</p>
           <p className="mt-2">{t.pricing.creditsNeverExpire}</p>
-          <p className="mt-2">{t.pricing.roundingNotice}</p>
           <p className="mt-2">{t.pricing.ratesNotice}</p>
         </motion.div>
       </div>

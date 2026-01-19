@@ -212,13 +212,12 @@ export type Dictionary = {
       customize: string;
       journey: string;
     };
-    purchase: string;
-    signInToPurchase: string;
-    securePayment: string;
-    creditsNeverExpire: string;
-    roundingNotice: string;
-    ratesNotice: string;
-  };
+      purchase: string;
+      signInToPurchase: string;
+      securePayment: string;
+      creditsNeverExpire: string;
+      ratesNotice: string;
+    };
   privacy: {
     title: string;
     sections: {
@@ -455,6 +454,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         sendLink: "Send Magic Link",
         checkEmail: "Check your email!",
         clickLink: "Click the link in your email to sign in.",
+        checkSpam: "If you don’t see it, check your Spam folder.",
       },
       verify: {
         verifying: "Verifying your link...",
@@ -567,7 +567,6 @@ export const dictionaries: Record<Locale, Dictionary> = {
       signInToPurchase: "Sign In to Purchase",
       securePayment: "Secure payment powered by Freedom Pay",
       creditsNeverExpire: "Credits never expire",
-      roundingNotice: "Prices are converted in real time and rounded up.",
       ratesNotice: "Exchange rates are set by the platform and may change.",
     },
     privacy: {
@@ -837,6 +836,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         sendLink: "Отправить ссылку",
         checkEmail: "Проверь email!",
         clickLink: "Кликни на ссылку в письме для входа.",
+        checkSpam: "Если письма нет, проверь папку «Спам».",
       },
       verify: {
         verifying: "Проверяем ссылку...",
@@ -949,7 +949,6 @@ export const dictionaries: Record<Locale, Dictionary> = {
       signInToPurchase: "Войти для покупки",
       securePayment: "Безопасная оплата через Freedom Pay",
       creditsNeverExpire: "Кредиты никогда не истекают",
-      roundingNotice: "Цены конвертируются в реальном времени и округляются вверх.",
       ratesNotice: "Курсы валют задаются платформой и могут меняться.",
     },
     privacy: {
@@ -1219,6 +1218,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         sendLink: "Сілтеме жіберу",
         checkEmail: "Email тексер!",
         clickLink: "Кіру үшін хатыңдағы сілтемені бас.",
+        checkSpam: "Хат келмесе, «Спам» қалтасын тексер.",
       },
       verify: {
         verifying: "Сілтемені тексеріп жатырмыз...",
@@ -1331,7 +1331,6 @@ export const dictionaries: Record<Locale, Dictionary> = {
       signInToPurchase: "Сатып алу үшін кіру",
       securePayment: "Freedom Pay арқылы қауіпсіз төлем",
       creditsNeverExpire: "Кредиттер ешқашан мерзімі өтпейді",
-      roundingNotice: "Бағалар нақты уақытта конвертацияланып, жоғарыға дөңгелектеледі.",
       ratesNotice: "Валюта бағамдары платформа арқылы орнатылады және өзгеруі мүмкін.",
     },
     privacy: {

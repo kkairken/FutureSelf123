@@ -326,6 +326,9 @@ function AuthPrompt() {
             <p className="text-sm text-foreground/60 mt-2">
               {t.auth.signIn.clickLink}
             </p>
+            <p className="text-sm text-foreground/60 mt-2">
+              {t.auth.signIn.checkSpam}
+            </p>
           </div>
         ) : (
           <form onSubmit={handleSendMagicLink} className="space-y-4">
