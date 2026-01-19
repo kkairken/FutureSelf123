@@ -15,6 +15,7 @@ export default function CreateChapterPage() {
   const router = useRouter();
   const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [user, setUser] = useState<any>(null);
   const [needsAuth, setNeedsAuth] = useState(false);
 
@@ -37,6 +38,22 @@ export default function CreateChapterPage() {
       setNeedsAuth(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setProgress(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        const next = prev + Math.floor(Math.random() * 6) + 2;
+        return next > 95 ? 95 : next;
+      });
+    }, 900);
+
+    return () => clearInterval(interval);
+  }, [loading]);
 
   const [formData, setFormData] = useState({
     bookTitle: "",
@@ -124,6 +141,18 @@ export default function CreateChapterPage() {
           <div className="text-6xl mb-4 animate-pulse">✨</div>
           <h2 className="text-2xl font-bold mb-2">{t.create.generating}</h2>
           <p className="text-foreground/70">{t.create.timeEstimate}</p>
+          <div className="mt-6">
+            <div className="flex items-center justify-between text-xs text-foreground/60 mb-2">
+              <span>{t.common.loading}</span>
+              <span>{progress}%</span>
+            </div>
+            <div className="h-2 rounded-full bg-border overflow-hidden">
+              <div
+                className="h-full bg-accent transition-all duration-700"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
         </motion.div>
       </div>
     );

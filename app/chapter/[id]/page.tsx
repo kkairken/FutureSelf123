@@ -16,6 +16,7 @@ export default function ChapterPage() {
   const [chapter, setChapter] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [continuing, setContinuing] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const archetypeLabels: Record<string, string> = {
     creator: t.archetypes.creator,
@@ -71,6 +72,25 @@ export default function ChapterPage() {
     fetchChapter();
   }, [params.id, router]);
 
+  useEffect(() => {
+    const isGenerating =
+      continuing || chapter?.status === "pending" || chapter?.status === "generating";
+
+    if (!isGenerating) {
+      setProgress(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        const next = prev + Math.floor(Math.random() * 6) + 2;
+        return next > 95 ? 95 : next;
+      });
+    }, 900);
+
+    return () => clearInterval(interval);
+  }, [continuing, chapter?.status]);
+
   if (loading || !chapter) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -102,6 +122,18 @@ export default function ChapterPage() {
             {t.chapter.creatingDesc}
           </p>
           <p className="text-sm text-accent">{t.chapter.timeEstimate}</p>
+          <div className="mt-6">
+            <div className="flex items-center justify-between text-xs text-foreground/60 mb-2">
+              <span>{t.common.loading}</span>
+              <span>{progress}%</span>
+            </div>
+            <div className="h-2 rounded-full bg-border overflow-hidden">
+              <div
+                className="h-full bg-accent transition-all duration-700"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
         </motion.div>
       </div>
     );
@@ -138,6 +170,18 @@ export default function ChapterPage() {
           <h1 className="text-3xl font-bold mb-4">{t.chapter.creating}</h1>
           <p className="text-foreground/70 mb-2">{t.chapter.creatingDesc}</p>
           <p className="text-sm text-accent">{t.chapter.timeEstimate}</p>
+          <div className="mt-6">
+            <div className="flex items-center justify-between text-xs text-foreground/60 mb-2">
+              <span>{t.common.loading}</span>
+              <span>{progress}%</span>
+            </div>
+            <div className="h-2 rounded-full bg-border overflow-hidden">
+              <div
+                className="h-full bg-accent transition-all duration-700"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
         </motion.div>
       </div>
     );
@@ -160,11 +204,22 @@ export default function ChapterPage() {
         body: JSON.stringify({ bookId: chapter.book.id }),
       });
       const data = await res.json();
-      if (res.ok) {
+      if (res.ok && data.chapterId) {
         router.push(`/chapter/${data.chapterId}`);
-      } else {
-        toast.error(data.error || t.common.error);
+        return;
       }
+
+      const fallback = await fetch(`/api/books/${chapter.book.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const fallbackData = await fallback.json();
+      const latest = fallbackData?.book?.chapters?.[0];
+      if (fallback.ok && latest?.id) {
+        router.push(`/chapter/${latest.id}`);
+        return;
+      }
+
+      toast.error(data.error || t.common.error);
     } catch (error) {
       toast.error(t.common.error);
     } finally {

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/Button";
 import { toast } from "@/components/Toaster";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -18,8 +18,7 @@ export default function DashboardPage() {
   const totalChapters = books.reduce((count, book) => count + (book._count?.chapters || 0), 0);
   const completedStories = books.filter((book) => book.chapters?.[0]?.status === "completed").length;
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = useCallback(async (silent = false) => {
       try {
         const token = localStorage.getItem("auth_token");
         if (!token) {
@@ -27,18 +26,20 @@ export default function DashboardPage() {
           return;
         }
 
-        // Fetch user
-        const userRes = await fetch("/api/auth/me", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const userData = await userRes.json();
+        if (!silent) {
+          // Fetch user
+          const userRes = await fetch("/api/auth/me", {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const userData = await userRes.json();
 
-        if (!userData.user) {
-          router.push("/create");
-          return;
+          if (!userData.user) {
+            router.push("/create");
+            return;
+          }
+
+          setUser(userData.user);
         }
-
-        setUser(userData.user);
 
         // Fetch books
         const chaptersRes = await fetch("/api/chapters/list", {
@@ -50,14 +51,30 @@ export default function DashboardPage() {
           setBooks(chaptersData.books || []);
         }
       } catch (error) {
-        toast.error(t.common.error);
+        if (!silent) {
+          toast.error(t.common.error);
+        }
       } finally {
-        setLoading(false);
+        if (!silent) {
+          setLoading(false);
+        }
       }
-    };
+    }, [router, t.common.error]);
 
+  useEffect(() => {
     fetchData();
-  }, [router]);
+  }, [fetchData]);
+
+  useEffect(() => {
+    const hasGenerating = books.some((book) => book.chapters?.[0]?.status === "generating");
+    if (!hasGenerating) return;
+
+    const interval = setInterval(() => {
+      fetchData(true);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [books, fetchData]);
 
   if (loading) {
     return (
@@ -183,21 +200,44 @@ export default function DashboardPage() {
                       <p className="text-foreground/70 line-clamp-2">{book.futureVision}</p>
                     </div>
                     <div className="self-start sm:self-auto">
-                      {latest?.status === "generating" && (
-                        <span className="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm animate-pulse">
-                          {t.dashboard.chapters.generating}
-                        </span>
-                      )}
-                      {latest?.status === "failed" && (
-                        <span className="px-3 py-1 bg-red-500/10 text-red-400 rounded-full text-sm">
-                          {t.dashboard.chapters.failed}
-                        </span>
-                      )}
-                      {latest?.status === "completed" && (
-                        <span className="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-sm">
-                          ✓ {t.dashboard.chapters.ready}
-                        </span>
-                      )}
+                      <AnimatePresence mode="wait">
+                        {latest?.status === "generating" && (
+                          <motion.span
+                            key="generating"
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 4 }}
+                            transition={{ duration: 0.2 }}
+                            className="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm animate-pulse"
+                          >
+                            {t.dashboard.chapters.generating}
+                          </motion.span>
+                        )}
+                        {latest?.status === "failed" && (
+                          <motion.span
+                            key="failed"
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 4 }}
+                            transition={{ duration: 0.2 }}
+                            className="px-3 py-1 bg-red-500/10 text-red-400 rounded-full text-sm"
+                          >
+                            {t.dashboard.chapters.failed}
+                          </motion.span>
+                        )}
+                        {latest?.status === "completed" && (
+                          <motion.span
+                            key="completed"
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 4 }}
+                            transition={{ duration: 0.2 }}
+                            className="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-sm"
+                          >
+                            ✓ {t.dashboard.chapters.ready}
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
                     </div>
                   </div>
                 </motion.div>
