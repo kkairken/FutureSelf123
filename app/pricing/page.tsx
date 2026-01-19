@@ -9,7 +9,7 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function PricingPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [currency, setCurrency] = useState<"KZT" | "USD" | "EUR">("KZT");
   const [loading, setLoading] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
@@ -109,11 +109,6 @@ export default function PricingPage() {
     [currency, t]
   );
 
-  const planById = useMemo(
-    () => new Map(plans.map((plan) => [plan.id, plan])),
-    [plans]
-  );
-
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
     if (token) {
@@ -135,40 +130,26 @@ export default function PricingPage() {
       return;
     }
 
-    const plan = planById.get(productType);
-    if (!plan) {
-      toast.error(t.common.error);
-      return;
-    }
-
     setLoading(productType);
 
     try {
       const token = localStorage.getItem("auth_token");
-      const reservationId = `${Date.now()}${Math.floor(Math.random() * 1000)
-        .toString()
-        .padStart(3, "0")}`;
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
-      const res = await fetch("/api/v1/payments/init", {
+      const res = await fetch("/api/v1/payments/link", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          reservation_id: reservationId,
-          amount: plan.amountKzt,
-          description: `${t.pricing.title}: ${plan.name}`,
-          success_url: `${appUrl}/payment/success?status=success`,
-          failure_url: `${appUrl}/payment/success?status=failed`,
           product_type: productType,
+          language: locale,
         }),
       });
 
       const data = await res.json();
 
-      if (res.ok && data.redirect_url) {
-        window.location.href = data.redirect_url;
+      if (res.ok && data.payment_url) {
+        window.location.href = data.payment_url;
       } else {
         toast.error(data.error || t.common.error);
       }
