@@ -1,0 +1,95 @@
+PRIVACY POLICY
+and processing of user information
+https://future-book.org
+Limited Liability Partnership "GRT Company"
+Last revised: January 18, 2026
+
+1. GENERAL PROVISIONS
+1.1. This Privacy Policy (the "Policy") defines the procedure for collection, use, storage, and protection of information obtained by the Limited Liability Partnership "GRT Company" (the "Company", the "Operator") from users of the website https://future-book.org (the "Platform", the "Site", the "Service").
+1.2. Use of the Platform means the User’s unconditional agreement with this Policy and the terms of information processing.
+1.3. If the User does not agree with the Policy, the User must stop using the Platform.
+1.4. The Policy is developed in accordance with the laws of the Republic of Kazakhstan, including rules on information and personal data protection.
+
+2. COMPANY PRINCIPLES
+2.1. The Company does not require or request personal data that directly identify an individual.
+2.2. The Service is designed so that the User:
+- does not provide full name, IIN, residential address, passport data;
+- does not enter real people’s names;
+- uses anonymized and generalized information.
+2.3. The User is responsible for keeping entered data anonymized.
+
+3. WHAT INFORMATION MAY BE PROCESSED
+3.1. Within the Platform, the Company may process the following information:
+A) technical information automatically transmitted when using the Site:
+- IP address;
+- browser and device type;
+- cookie data;
+- date and time of access;
+- session technical parameters;
+B) anonymized user information voluntarily entered by the User:
+- generalized facts about life (without personal data);
+- formulations of desires, goals, and expectations;
+- text prompts for generating a fictional work;
+C) limited payment information:
+- payment identifier;
+- amount and payment date;
+- transaction status.
+The Company does not store or process full bank card data — such data is processed exclusively by payment partners.
+
+4. PURPOSES OF INFORMATION PROCESSING
+4.1. Information is processed solely for the following purposes:
+- providing access to the Service;
+- forming and providing the Result (book);
+- ensuring technical operation of the Platform;
+- processing payments and confirming payment;
+- improving service quality;
+- preventing abuse and violations of the offer terms.
+4.2. The Company does not use information for:
+- identifying the User;
+- transferring data to third parties for commercial purposes;
+- sending advertising without the User’s consent.
+
+5. COOKIES AND ANALYTICS
+5.1. The Platform may use cookies and similar technologies to:
+- ensure proper Site operation;
+- analyze traffic;
+- improve the user experience.
+5.2. The User may restrict or disable cookies in browser settings; however, some Platform features may not work correctly.
+
+6. TRANSFER OF INFORMATION TO THIRD PARTIES
+6.1. The Company does not transfer User information to third parties except:
+- to payment partners — only to the extent required to process payments;
+- to government authorities — upon lawful and justified request;
+- to technical contractors — to the extent required to support the Platform infrastructure.
+6.2. Transfer of information is carried out with confidentiality and security measures.
+
+7. STORAGE AND PROTECTION OF INFORMATION
+7.1. The Company takes reasonable organizational and technical measures to protect information from:
+- unauthorized access;
+- loss;
+- alteration;
+- disclosure.
+7.2. Information retention periods are determined by processing purposes and the laws of the Republic of Kazakhstan.
+
+8. USER RIGHTS
+8.1. The User has the right to:
+- receive information about processing principles;
+- stop using the Platform;
+- contact the Company with questions related to information processing.
+8.2. Because personal data is not collected, the ability to modify or delete such data is objectively limited.
+
+9. LIMITATION OF LIABILITY
+9.1. The Company is not responsible for:
+- information voluntarily disclosed by the User to third parties;
+- consequences of violating anonymization requirements;
+- loss of data due to reasons beyond the Company’s control (force majeure, provider failures).
+
+10. POLICY CHANGES
+10.1. The Company may amend this Policy unilaterally.
+10.2. The new version takes effect upon publication on the Platform https://future-book.org.
+
+11. CONTACT INFORMATION
+For questions related to this Policy, the User may contact:
+Syltangroup@gmail.ru
+
+This Privacy Policy is effective from the moment of publication and applies to all Platform Users.

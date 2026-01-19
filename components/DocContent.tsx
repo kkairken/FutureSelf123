@@ -23,20 +23,38 @@ export function DocContent({ docKey }: { docKey: DocKey }) {
     let active = true;
     setDoc((prev) => ({ ...prev, loading: true }));
 
-    fetch(`/api/docs/${docKey}?locale=${locale}`)
-      .then((res) => res.json())
-      .then((data) => {
+    const loadDoc = async () => {
+      const tryLocale = async (lang: string) => {
+        const res = await fetch(`/legal/${docKey}.${lang}.txt`, { cache: "no-store" });
+        if (!res.ok) return null;
+        return res.text();
+      };
+
+      try {
+        const text = (await tryLocale(locale)) || (await tryLocale("ru"));
         if (!active) return;
+        if (!text) {
+          setDoc((prev) => ({ ...prev, loading: false }));
+          return;
+        }
+
+        const lines = text.split(/\r?\n/);
+        const titleIndex = lines.findIndex((line) => line.trim().length > 0);
+        const title = titleIndex >= 0 ? lines[titleIndex].trim() : "";
+        const bodyLines = titleIndex >= 0 ? lines.slice(titleIndex + 1) : lines;
+
         setDoc({
-          title: data.title || "",
-          body: data.body || "",
+          title,
+          body: bodyLines.join("\n").trim(),
           loading: false,
         });
-      })
-      .catch(() => {
+      } catch {
         if (!active) return;
         setDoc((prev) => ({ ...prev, loading: false }));
-      });
+      }
+    };
+
+    loadDoc();
 
     return () => {
       active = false;

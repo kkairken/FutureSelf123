@@ -1,0 +1,69 @@
+PAYMENT PROCEDURE
+for the digital service on https://future-book.org
+Limited Liability Partnership "GRT Company"
+Last revised: January 18, 2026
+
+1. GENERAL PROVISIONS
+1.1. This document defines the payment procedure for the digital entertainment service that generates a fictional work (book) provided by the Limited Liability Partnership "GRT Company" (the "Company") via the website https://future-book.org (the "Platform", the "Site").
+1.2. Payment for the Service is made voluntarily by the User in non-cash form using the payment instruments available on the Platform.
+1.3. By making a payment, the User confirms consent with:
+- the Public Offer;
+- the User Agreement;
+- the Privacy Policy;
+- this payment procedure description.
+
+2. PAYMENT METHODS
+2.1. Payment for the Service is made in non-cash form through the payment service (acquiring) provided by the Company’s payment partner — Freedom Pay / JSC "Freedom Bank Kazakhstan".
+2.2. Bank cards of international payment systems are accepted, including but not limited to:
+- Visa
+- Mastercard
+2.3. The list of available payment methods may be changed by the Company unilaterally without prior notice by updating the information on the Platform.
+
+3. PAYMENT PROCESS
+3.1. To pay for the Service, the User:
+- selects a service (digital product) on the Platform;
+- confirms agreement with the Public Offer and other mandatory documents;
+- clicks the payment button;
+- is redirected to the secure payment page of the payment partner.
+3.2. On the payment page, the User independently enters the bank card details required to complete the payment.
+3.3. The Company does not receive, store, or process full bank card details. Payment data is processed exclusively by the payment partner in accordance with its rules, security standards, and payment system requirements.
+3.4. A payment is considered completed when the payment partner successfully confirms the payment transaction.
+
+4. PAYMENT CURRENCY
+4.1. All payments on the Platform are made in the national currency of the Republic of Kazakhstan — tenge (KZT).
+4.2. If the User uses a card linked to an account in another currency, conversion is carried out by the issuing bank at its exchange rate and on its terms.
+
+5. FEES AND ADDITIONAL COSTS
+5.1. The Company does not charge additional fees beyond the Service price shown on the Platform.
+5.2. Any fees related to currency conversion or card service conditions are set by the issuing bank and are paid by the User independently.
+
+6. PAYMENT CONFIRMATION
+6.1. After successful payment, the User is granted access to the Service and/or the result in the manner set out in the Platform documents.
+6.2. Payment confirmation includes:
+- electronic confirmation from the payment partner;
+- transaction identifier;
+- payment status information in the Platform system.
+6.3. The User must keep payment confirmation until the digital product is received.
+
+7. PAYMENT ERRORS
+7.1. If a payment was not completed or was declined, the User may retry the payment.
+7.2. The Company is not responsible for payment failures caused by:
+- insufficient funds in the account;
+- restrictions imposed by the issuing bank;
+- technical failures of payment systems;
+- errors in entering payment details.
+
+8. REFUNDS
+8.1. The procedure and conditions for refunds are regulated by the Company’s Public Offer.
+8.2. Due to the digital nature of the Service and the individualized result, refunds are generally not provided except as required by the laws of the Republic of Kazakhstan or the Public Offer.
+
+9. PAYMENT SECURITY
+9.1. Payment operations are carried out through secure communication channels using modern encryption technologies.
+9.2. The Company takes reasonable measures to ensure payment security but is not responsible for actions of third parties (banks, payment aggregators) outside its control.
+
+10. FINAL PROVISIONS
+10.1. Use of the Platform and making a payment means the User agrees to this payment procedure description.
+10.2. The Company may amend this document unilaterally by publishing a new version on the Platform https://future-book.org.
+
+LLP "GRT Company"
+Republic of Kazakhstan

@@ -283,7 +283,7 @@ function AuthPrompt() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   const handleSendMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -293,7 +293,7 @@ function AuthPrompt() {
       const res = await fetch("/api/auth/magic-link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, locale }),
       });
 
       if (res.ok) {

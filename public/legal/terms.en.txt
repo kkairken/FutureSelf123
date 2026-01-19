@@ -1,0 +1,80 @@
+USER AGREEMENT
+for use of the website and digital service
+Limited Liability Partnership "GRT Company"
+Last revised: January 18, 2026
+
+1. GENERAL PROVISIONS
+1.1. This User Agreement (the "Agreement") regulates the relationship between the Limited Liability Partnership "GRT Company" (the "Company", the "Administration", the "Rights Holder") and an individual (the "User") arising from the use of the website https://future-book.org (the "Site", the "Platform") and the digital entertainment service for generating a fictional work (the "Service").
+1.2. This Agreement is binding for all Platform Users regardless of payment.
+1.3. Use of the Site, navigation, form completion, starting functionality, placing an order, payment, or receiving a result means full and unconditional acceptance of this Agreement.
+1.4. If the User does not agree with the Agreement, the User must immediately stop using the Site and Service.
+
+2. RELATED DOCUMENTS
+2.1. Use of the Site and Service is carried out in accordance with and subject to the following documents posted on the Platform:
+- Public Offer;
+- Privacy Policy;
+- Disclaimers and limitation of liability;
+- Service description and pricing.
+2.2. These documents are an integral part of this Agreement and apply in their current versions.
+
+3. SERVICE DESCRIPTION
+3.1. The Service is a digital software and algorithmic product intended for automatic generation of a fictional text (book) based on anonymized data provided by the User.
+3.2. The Service result is a fictional literary work and is not directly related to the User’s real life.
+3.3. The Service is exclusively for entertainment and creative purposes.
+
+4. TERMS OF USE
+4.1. The User may use the Site and Service only for lawful purposes.
+4.2. The User is prohibited from:
+- providing personal data (full name, IIN, addresses, phone numbers, and other identifiers);
+- using the Service to harm themselves or third parties;
+- presenting the Result as professional advice;
+- interfering with the Service, using automation, bots, or scripts;
+- bypassing restrictions and payment mechanisms.
+4.3. The User bears full responsibility for the content of input data and consequences of its use.
+
+5. REGISTRATION AND ACCESS
+5.1. Registration or provision of contact information may be required to use certain features.
+5.2. The User must provide accurate information and keep it up to date.
+5.3. The Company may restrict or terminate the User’s access if this Agreement is violated.
+
+6. INTELLECTUAL PROPERTY
+6.1. All rights to the Site, Service, source code, design, structure, and algorithms belong to the Company.
+6.2. The User receives a limited right to use the Result for personal non-commercial purposes.
+6.3. Commercial use of the Result is allowed only with the Company’s written consent.
+
+7. DISCLAIMER OF LIABILITY
+7.1. The Company does not guarantee:
+- achievement of the User’s goals;
+- changes in life circumstances;
+- psychological, financial, or other effects.
+7.2. The Company is not liable for:
+- the User’s decisions and actions;
+- subjective assessment of the literary text;
+- consequences of interpretation of the Result.
+7.3. The Service is provided AS IS.
+
+8. PAID FEATURES
+8.1. Certain features of the Service may be paid.
+8.2. Payment, refunds, and access conditions are regulated by the Public Offer.
+
+9. CHANGES TO THE SERVICE AND AGREEMENT
+9.1. The Company may change the functionality of the Site and Service without prior notice.
+9.2. The Company may unilaterally modify this Agreement.
+9.3. Continued use of the Site indicates the User’s acceptance of the new version.
+
+10. USER LIABILITY
+10.1. The User is responsible for violations of the laws of the Republic of Kazakhstan and this Agreement.
+10.2. The User must compensate the Company for losses resulting from violations.
+
+11. FORCE MAJEURE
+11.1. The Company is not responsible for failure to fulfill obligations due to reasons beyond its control.
+
+12. APPLICABLE LAW AND DISPUTES
+12.1. The applicable law is the law of the Republic of Kazakhstan.
+12.2. Disputes are subject to consideration at the Company’s place of registration.
+
+13. CONTACT INFORMATION
+Rights Holder: LLP "GRT Company"
+Email: Syltangroup@gmail.ru
+
+This User Agreement enters into force from the moment of publication on https://future-book.org and remains in effect indefinitely.

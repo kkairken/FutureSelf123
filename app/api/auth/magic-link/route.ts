@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json();
+    const { email, locale } = await request.json();
 
     if (!email || !email.includes("@")) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
@@ -22,9 +22,18 @@ export async function POST(request: Request) {
       });
     }
 
+    const normalizedLocale = ["en", "ru", "kz"].includes(locale) ? locale : null;
+    if (normalizedLocale && user.language !== normalizedLocale) {
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: { language: normalizedLocale },
+      });
+    }
+
     // Generate and send magic link
     const token = await generateMagicLink(email);
-    await sendMagicLinkEmail(email, token, (user.language as any) || "en");
+    const emailLocale = normalizedLocale || (user.language as any) || "en";
+    await sendMagicLinkEmail(email, token, emailLocale);
 
     return NextResponse.json({ success: true });
   } catch (error) {
