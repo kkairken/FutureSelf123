@@ -113,6 +113,22 @@ export default function CreateChapterPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center max-w-md"
+        >
+          <div className="text-6xl mb-4 animate-pulse">✨</div>
+          <h2 className="text-2xl font-bold mb-2">{t.create.generating}</h2>
+          <p className="text-foreground/70">{t.create.timeEstimate}</p>
+        </motion.div>
+      </div>
+    );
+  }
+
   if (needsAuth) {
     return <AuthPrompt />;
   }
