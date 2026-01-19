@@ -1,19 +1,46 @@
 import fs from "fs";
 import path from "path";
+import type { Locale } from "@/lib/i18n/dictionaries";
 
-const DOCS: Record<string, string> = {
-  offer: "docs/Публичный офер.txt",
-  privacy: "docs/ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ.txt",
-  terms: "docs/ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ.txt",
-  payment: "docs/ОПИСАНИЕ ПОРЯДКА ОПЛАТЫ.txt",
-  delivery: "docs/ИНФОРМАЦИЯ о способах получения цифрового товара.txt",
-  contacts: "docs/КОНТАКТНЫЕ ДАННЫЕ КОМПАНИИ.txt",
+const DOCS: Record<string, Record<string, string>> = {
+  offer: {
+    ru: "docs/Публичный офер.txt",
+    en: "docs/offer.en.txt",
+    kz: "docs/offer.kz.txt",
+  },
+  privacy: {
+    ru: "docs/ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ.txt",
+    en: "docs/privacy.en.txt",
+    kz: "docs/privacy.kz.txt",
+  },
+  terms: {
+    ru: "docs/ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ.txt",
+    en: "docs/terms.en.txt",
+    kz: "docs/terms.kz.txt",
+  },
+  payment: {
+    ru: "docs/ОПИСАНИЕ ПОРЯДКА ОПЛАТЫ.txt",
+    en: "docs/payment.en.txt",
+    kz: "docs/payment.kz.txt",
+  },
+  delivery: {
+    ru: "docs/ИНФОРМАЦИЯ о способах получения цифрового товара.txt",
+    en: "docs/delivery.en.txt",
+    kz: "docs/delivery.kz.txt",
+  },
+  contacts: {
+    ru: "docs/КОНТАКТНЫЕ ДАННЫЕ КОМПАНИИ.txt",
+    en: "docs/contacts.en.txt",
+    kz: "docs/contacts.kz.txt",
+  },
 };
 
 export type DocKey = keyof typeof DOCS;
 
-export function getDocContent(key: DocKey) {
-  const filePath = path.join(process.cwd(), DOCS[key]);
+export function getDocContent(key: DocKey, locale: Locale | string = "ru") {
+  const fallback = DOCS[key].ru;
+  const localized = DOCS[key][locale as string] || fallback;
+  const filePath = path.join(process.cwd(), localized);
   const raw = fs.readFileSync(filePath, "utf8");
   const lines = raw.split(/\r?\n/);
   const titleIndex = lines.findIndex((line) => line.trim().length > 0);

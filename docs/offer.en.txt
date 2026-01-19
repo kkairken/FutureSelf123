@@ -1,0 +1,187 @@
+AGREEMENT
+on use of the website and access to the digital entertainment service
+for generating a fictional work
+
+Limited Liability Partnership "GRT Company"
+
+LAST REVISION DATE: January 18, 2026
+
+This agreement (the "Agreement") is a public offer under Article 395(5) of the Civil Code of the Republic of Kazakhstan. A public offer is a proposal containing all essential terms of a contract that expresses the intent of the offering party to conclude a contract on the stated terms with anyone who accepts the offer.
+Acceptance of the offer means obtaining, paying for, and/or using the digital service and/or its result at the prices and under the terms stated on the website and in this Agreement in accordance with Article 396 of the Civil Code of the Republic of Kazakhstan.
+
+IMPORTANT NOTICE
+PLEASE READ THIS AGREEMENT CAREFULLY BEFORE USING THE FUTURE-BOOK.ORG WEBSITE AND THE RELATED DIGITAL SERVICE.
+IF YOU DO NOT AGREE WITH ALL TERMS OF THIS AGREEMENT, YOU MUST NOT USE THE SERVICE, PLACE AN ORDER, OR ACCESS THE SERVICE RESULT.
+
+Thank you for your interest in the online services and digital interactive products of LLP "GRT Company" provided through the website:
+https://future-book.org (the "Platform", the "Site").
+
+This Agreement defines the terms under which the User is granted the right to use the Platform and access the digital entertainment service for generating a fictional work (book).
+
+THE TERM "PLATFORM" IN THIS AGREEMENT INCLUDES, SEPARATELY AND TOGETHER:
+- the future-book.org website, including all pages, sections, subdomains, and interface elements;
+- the digital service of LLP "GRT Company" for generating a fictional text (book) about a hypothetical future of a character;
+- any software, algorithmic, visual, and textual components of the Service;
+- all functional modules, input forms, and result generation mechanisms;
+- all versions of the Platform, including web, mobile, and responsive interfaces;
+- electronic information resources of LLP "GRT Company" related to the Platform and Service.
+
+This Agreement governs the provision of the Company’s digital service via the website future-book.org. In addition to this Agreement, other Company documents published on the Platform form an integral part of the relationship, including but not limited to the Privacy Policy, service description, pricing, disclaimers, warnings, and limitation of liability provisions. These documents apply in their current versions at the time of use and/or payment and are binding on the User.
+
+The Agreement is structured as follows:
+- General provisions. Legal nature of the offer;
+- Terms and definitions;
+- Subject of the contract. Service concept and mechanics;
+- Acceptance of the offer. Procedure for concluding the contract;
+- Disclaimer. Entertainment nature. No guarantees;
+- Price, payment, currency, and price changes;
+- Access and delivery of results;
+- Registration, account, access, and security;
+- Rights and obligations of the Parties;
+- Prohibitions and restrictions;
+- Intellectual property;
+- Refunds, refusal of service, chargebacks;
+- Liability and limitation of liability;
+- Force majeure;
+- Dispute resolution and applicable law;
+- Changes, term, and termination;
+- Company contacts and details.
+
+Use of the Platform, the Service, placing an order, payment, or receipt of the result means full and unconditional acceptance of all terms of this Agreement.
+
+1. GENERAL PROVISIONS. LEGAL NATURE OF THE OFFER
+1.1. This document is an official public offer by LLP "GRT Company" (the "Company", the "Executor", the "Rights Holder") to an indefinite circle of persons to conclude a contract on the terms set forth herein.
+1.2. The offer is published on the Company’s website and/or Service pages available to the User before use or payment. The offer remains in force until withdrawn or replaced.
+1.3. This offer is drafted in accordance with the Civil Code of the Republic of Kazakhstan. In case of conflict with advertising or informational materials, the text of the offer prevails.
+1.4. Acceptance of the offer means full and unconditional acceptance of all terms without exceptions. Partial acceptance or acceptance on other terms is not allowed.
+1.5. By accepting, the User confirms that:
+- the User has full legal capacity to conclude the contract;
+- the User has read and understood the Agreement and its consequences;
+- the User accepts the terms voluntarily without pressure;
+- the User understands the entertainment and fictional nature of the Service result;
+- the User acts in their own interests and accepts the risks described herein.
+1.6. If the User disagrees with any provision, they must immediately stop using the Service and not accept the offer.
+1.7. The Company may amend the offer unilaterally. The new version is effective upon publication unless stated otherwise.
+
+2. TERMS AND DEFINITIONS
+2.1. Site — the internet resource (including domain, subdomains, landing pages, payment interfaces) where the Service is hosted and access is provided.
+2.2. Service — the Company’s digital software and algorithmic product that automatically generates a fictional text based on user input.
+2.3. User / Customer — a legally capable individual who accepts the offer and uses the Service to obtain a fictional result.
+2.4. Book / Work / Result — a text generated by the Service based on user inputs, describing a hypothetical future life of a character.
+2.5. Input data — information provided by the User: generalized life facts and descriptions of desires, goals, and expectations. Input data must be anonymized and must not violate third-party rights.
+2.6. Personal data — information that allows direct or indirect identification of a person under the laws of the Republic of Kazakhstan.
+2.7. Acceptance — actions described in Section 4 that constitute acceptance of the offer.
+2.8. Service — provision of access to the Service and/or delivery of the Result in electronic form within the selected functionality and paid tariff.
+2.9. Tariff / Price — the price of access to the Service and/or creation of the Result, set by the Company and shown on the Site in KZT.
+2.10. Payment partner — a bank or payment provider that processes card and other non-cash payments.
+2.11. AS IS — provision of the Service and Result without guarantees of meeting subjective expectations or achieving real-life outcomes.
+
+3. SUBJECT OF THE CONTRACT. SERVICE MECHANICS
+3.1. The Company provides the User with access to a Service that automatically generates a fictional text (book) about a hypothetical future based on user input.
+3.2. The User inputs data voluntarily and without personal identifiers. The Company assumes the User does not input names, addresses, IIN, phone numbers, or third-party data.
+3.3. The Result is generated using automated text generation methods, including models, templates, styles, and other techniques.
+3.4. The Result is a fictional work intended for entertainment and motivational perception and is not a document, forecast, recommendation, or instruction.
+3.5. The User acknowledges that:
+- the Result may include fictional assumptions, metaphors, and stylistic elements;
+- the Result may not match subjective expectations regarding style, length, or narrative logic;
+- the Result may include general life statements typical of literary texts.
+3.6. The Company does not provide psychological counseling, psychotherapy, coaching, legal, financial, medical, or other professional services requiring licensing.
+3.7. The User uses the Service at their own initiative; the Service does not create obligations to ensure real-life outcomes.
+3.8. The Company does not guarantee any behavioral changes or achievements as a result of using the Service.
+
+4. ACCEPTANCE OF THE OFFER
+4.1. Acceptance occurs when the User performs any of the following actions:
+- uses the Service functionality;
+- places an order;
+- makes a payment;
+- accesses the Result.
+4.2. Acceptance confirms the User’s agreement with all terms of this Agreement and related documents.
+
+5. DISCLAIMER. ENTERTAINMENT NATURE. NO GUARANTEES
+5.1. The Service is an entertainment digital product and does not constitute professional advice.
+5.2. The Company provides the Service and Result AS IS and does not guarantee any specific outcomes.
+
+6. PRICE, PAYMENT, CURRENCY, AND PRICE CHANGES
+6.1. The Service price is shown on the Site in KZT and applies at the time of ordering/payment.
+6.2. The Company may change tariffs, prices, and functionality unilaterally; such changes do not affect already paid orders.
+6.3. Payment is made via non-cash methods available on the Site.
+6.4. Bank or payment partner fees may apply and are borne by the User.
+6.5. Payment is deemed complete upon confirmation by the payment partner.
+6.6. The Company does not store full card data; payment data is processed by the payment partner.
+6.7. If the User provides incorrect data (e.g., wrong email), the User bears the risk of not receiving the Result.
+6.8. The Company may run promotions, discounts, or promo codes on separate terms.
+
+7. ACCESS AND DELIVERY OF THE RESULT
+7.1. Access to the Service is provided after acceptance (and payment if applicable).
+7.2. The Result is provided electronically, including via the user account, a viewing/download link, or email (if available).
+7.3. Delivery depends on technical factors outside the Company’s control.
+7.4. If delivery is by email, the User is responsible for a correct email address and checking spam folders.
+7.5. The Company may set technical limits on generation attempts or input volume.
+7.6. The Company may temporarily suspend the Service for maintenance.
+7.7. The Company may change Service functionality and output format without user notice if it does not worsen paid access or due to technical/legal requirements.
+7.8. The Company may test new features and change the order of steps while preserving the artistic nature of the product.
+
+8. REGISTRATION, ACCOUNT, ACCESS, AND SECURITY
+8.1. Registration may be required for certain features.
+8.2. The User must keep access data confidential and is responsible for actions taken with their access credentials.
+8.3. The User must notify the Company of any suspected unauthorized access.
+8.4. The Company may restrict or block access if there is abuse or violations of this Agreement.
+8.5. The Company may request additional information to confirm access rights in security cases.
+
+9. RIGHTS AND OBLIGATIONS
+9.1. The Company must provide access to the Service on the terms of this Agreement and ensure reasonable availability.
+9.2. The Company may change functionality, set usage limits, suspend the Platform for maintenance, block access for violations, and update this Agreement.
+9.3. The User must use the Service legally, provide anonymized inputs, and avoid prohibited content or interference.
+9.4. The User may access the Service, contact support, and stop using the Service at any time.
+
+10. PROHIBITIONS AND RESTRICTIONS
+10.1. The User is prohibited from:
+- using the Service to create content that violates the laws of Kazakhstan;
+- using the Service to harm themselves or others;
+- presenting the Result as professional advice;
+- publishing the Result as a guaranteed scenario of the future;
+- violating intellectual property rights;
+- attempting to reverse engineer or bypass protection measures.
+10.2. The Company may restrict access or terminate the Agreement in case of violations.
+
+11. INTELLECTUAL PROPERTY
+11.1. All intellectual property rights to the Platform and Service belong to the Company or are used legally by the Company.
+11.2. The User receives a limited, non-exclusive, non-transferable right to use the Platform and Service for personal, non-commercial purposes.
+11.3. The User may use the Result for personal purposes only; commercial use is allowed only with the Company’s written consent.
+11.4. The User acknowledges that the Result may not be unique due to common literary constructs.
+
+12. REFUNDS, REFUSAL OF SERVICE, CHARGEBACKS
+12.1. The User acknowledges that the Service provides a digital product generated by an individual request and delivered AS IS.
+12.2. Refunds are not provided except for:
+- duplicate charges confirmed by the payment partner;
+- lack of access due to the Company’s fault with proof of payment;
+- cases required by law.
+12.3. To request a refund, the User must submit a support request with payment details.
+12.4. The Company may refuse a refund in case of abuse.
+12.5. If the User initiates a chargeback without prior support contact and without legal grounds, the Company may restrict access.
+
+13. LIABILITY AND LIMITATION OF LIABILITY
+13.1. The Company is not responsible for:
+- the User’s decisions based on the Result;
+- the User’s expectations of life changes;
+- subjective assessment of the Result;
+- consequences of sharing the Result;
+- failures in Internet, banks, or payment partners.
+13.2. The User is fully responsible for their actions and for compliance with this Agreement.
+
+14. FORCE MAJEURE
+14.1. The Parties are released from liability for failure to perform due to force majeure circumstances.
+
+15. DISPUTE RESOLUTION AND APPLICABLE LAW
+15.1. The applicable law is the law of the Republic of Kazakhstan.
+15.2. Disputes are resolved at the Company’s place of registration unless otherwise required by law.
+
+16. CHANGES, TERM, AND TERMINATION
+16.1. The Agreement is in force from the moment of acceptance and remains in effect until terminated.
+16.2. The Company may terminate the Agreement and restrict access in case of violations.
+
+17. CONTACTS AND COMPANY DETAILS
+LLP "GRT Company"
+Email: Syltangroup@gmail.ru
+
+This Agreement is published on https://future-book.org and is effective from the date of publication.

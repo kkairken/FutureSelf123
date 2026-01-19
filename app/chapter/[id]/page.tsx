@@ -216,7 +216,8 @@ export default function ChapterPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const fallbackData = await fallback.json();
-      const latest = fallbackData?.book?.chapters?.[0];
+      const chapters = fallbackData?.book?.chapters || [];
+      const latest = chapters[chapters.length - 1];
       if (fallback.ok && latest?.id) {
         router.push(`/chapter/${latest.id}`);
         return;
