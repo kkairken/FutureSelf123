@@ -54,8 +54,6 @@ export async function POST(request: Request) {
       pg_result_url,
       pg_salt,
       pg_order_id: orderId,
-      user_id: user.id,
-      product_type: productType,
     });
 
     const pg_sig = buildSig("make_recurring_payment", params, secretKey);

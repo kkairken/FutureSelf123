@@ -33,8 +33,6 @@ export interface InitPaymentParams {
   description: string;
   currency?: string;
   language?: string;
-  userId?: string;
-  productType?: string;
   // Recurring payment options
   recurringStart?: boolean;
   recurringLifetime?: number; // months (1-156)
@@ -296,14 +294,6 @@ export async function initPayment(
     if (params.recurringLifetime) {
       requestParams.pg_recurring_lifetime = String(params.recurringLifetime);
     }
-  }
-
-  // Add custom parameters (will be passed to callbacks)
-  if (params.userId) {
-    requestParams.user_id = params.userId;
-  }
-  if (params.productType) {
-    requestParams.product_type = params.productType;
   }
 
   // Calculate signature

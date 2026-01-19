@@ -91,8 +91,6 @@ export async function POST(request: Request) {
     pg_payment_id: params.pg_payment_id,
     pg_payment_status: params.pg_payment_status,
     pg_result: params.pg_result,
-    user_id: params.user_id,
-    product_type: params.product_type,
   });
 
   // 2. Get script name for signature verification
@@ -116,51 +114,23 @@ export async function POST(request: Request) {
   const recurringProfile = params.pg_recurring_profile || null;
   const recurringExpiry = params.pg_recurring_profile_expiry_date || null;
 
-  // Custom parameters passed from init
-  const userId = params.user_id || null;
-  const productType = params.product_type || null;
-
   console.log("[FreedomPay Result] Normalized status:", status);
 
   // 5. Find existing payment record
-  let payment = await prisma.payment.findFirst({
-    where: {
-      provider: "freedompay",
-      OR: [
-        pgPaymentId ? { pgPaymentId } : undefined,
-        orderId ? { pgOrderId: orderId } : undefined,
-      ].filter(Boolean) as any,
-    },
-  });
+  const payment = orderId
+    ? await prisma.payment.findUnique({
+        where: { pgOrderId: orderId },
+      })
+    : null;
 
   // 6. Create or update payment record
   if (!payment) {
-    // Payment not found - create new record if we have user_id
-    if (userId) {
-      console.log("[FreedomPay Result] Creating new payment record");
-      payment = await prisma.payment.create({
-        data: {
-          userId,
-          amount: Math.round(Number(params.pg_amount || 0) * 100) || 0,
-          currency: params.pg_currency || "KZT",
-          status,
-          productType: productType || "freedompay",
-          creditsAdded: 0,
-          provider: "freedompay",
-          pgOrderId: orderId,
-          pgPaymentId,
-          pgRecurringProfile: recurringProfile,
-          rawPayload: params,
-        },
-      });
-    } else {
-      console.error("[FreedomPay Result] Payment not found and no user_id provided");
-      const xml = buildResponseXml(scriptName, "error", "Payment not found", secretKey);
-      return new NextResponse(xml, {
-        status: 200,
-        headers: { "Content-Type": "text/xml" },
-      });
-    }
+    console.error("[FreedomPay Result] Payment not found for order:", orderId);
+    const xml = buildResponseXml(scriptName, "error", "Payment not found", secretKey);
+    return new NextResponse(xml, {
+      status: 200,
+      headers: { "Content-Type": "text/xml" },
+    });
   } else {
     // Payment found - check if already processed
     if (payment.status === "completed" || payment.status === "failed") {

@@ -65,9 +65,9 @@ const PRODUCT_NAMES: Record<string, Record<string, string>> = {
     kz: "7 тарау",
   },
   "5_chapters": {
-    en: "20 chapters",
-    ru: "20 глав",
-    kz: "20 тарау",
+    en: "5 chapters",
+    ru: "5 глав",
+    kz: "5 тарау",
   },
   "10_chapters": {
     en: "40 chapters",
@@ -173,7 +173,21 @@ export async function POST(request: Request) {
       }
     }
 
-    // 8. Initialize payment with FreedomPay
+    // 8. Create payment record in database (pending)
+    const payment = await prisma.payment.create({
+      data: {
+        userId: user.id,
+        amount: Math.round(product.amount * 100), // Store in cents
+        currency: "KZT",
+        status: "pending",
+        productType,
+        creditsAdded: 0,
+        provider: "freedompay",
+        pgOrderId: orderId,
+      },
+    });
+
+    // 9. Initialize payment with FreedomPay
     console.log("[Payment Init] Starting payment:", {
       userId: user.id,
       productType,
@@ -187,13 +201,11 @@ export async function POST(request: Request) {
       amount: product.amount,
       description,
       language,
-      userId: user.id,
-      productType,
       recurringStart: product.isSubscription,
       recurringLifetime: product.recurringLifetime,
     });
 
-    // 9. Handle response
+    // 10. Handle response
     const pg_status = response.parsed.pg_status;
     const pg_error_code = response.parsed.pg_error_code;
     const pg_error_description = response.parsed.pg_error_description;
@@ -208,6 +220,14 @@ export async function POST(request: Request) {
 
       // Provide helpful error message
       const errorMessage = pg_error_description || getErrorDescription(pg_error_code || "0");
+
+      await prisma.payment.update({
+        where: { id: payment.id },
+        data: {
+          status: "failed",
+          rawPayload: response.parsed,
+        },
+      });
 
       return NextResponse.json(
         {
@@ -230,31 +250,25 @@ export async function POST(request: Request) {
 
     if (!redirect_url) {
       console.error("[Payment Init] No redirect URL in response:", response.parsed);
+      await prisma.payment.update({
+        where: { id: payment.id },
+        data: {
+          status: "failed",
+          rawPayload: response.parsed,
+        },
+      });
       return NextResponse.json(
         { error: "No redirect URL received from payment system" },
         { status: 502 }
       );
     }
 
-    // 10. Create payment record in database
-    const payment = await prisma.payment.create({
+    // 11. Update payment record with gateway response
+    await prisma.payment.update({
+      where: { id: payment.id },
       data: {
-        userId: user.id,
-        amount: Math.round(product.amount * 100), // Store in cents
-        currency: "KZT",
-        status: "pending",
-        productType,
-        creditsAdded: 0,
-        provider: "freedompay",
-        pgOrderId: orderId,
         pgPaymentId: pg_payment_id || null,
-        rawPayload: {
-          ...response.parsed,
-          // Store metadata for callbacks
-          internal_user_id: user.id,
-          internal_product_type: productType,
-          internal_credits: product.credits,
-        },
+        rawPayload: response.parsed,
       },
     });
 
@@ -265,7 +279,7 @@ export async function POST(request: Request) {
       redirectUrl: redirect_url,
     });
 
-    // 11. Return redirect URL
+    // 12. Return redirect URL
     return NextResponse.json({
       redirect_url,
       pg_payment_id,

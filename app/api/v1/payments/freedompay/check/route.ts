@@ -68,8 +68,6 @@ export async function POST(request: Request) {
   console.log("[FreedomPay Check] Received callback:", {
     pg_order_id: params.pg_order_id,
     pg_amount: params.pg_amount,
-    user_id: params.user_id,
-    product_type: params.product_type,
   });
 
   // 2. Get script name for signature verification
@@ -98,11 +96,8 @@ export async function POST(request: Request) {
   }
 
   // 5. Check if payment exists in database
-  const payment = await prisma.payment.findFirst({
-    where: {
-      provider: "freedompay",
-      pgOrderId: orderId,
-    },
+  const payment = await prisma.payment.findUnique({
+    where: { pgOrderId: orderId },
   });
 
   if (!payment) {

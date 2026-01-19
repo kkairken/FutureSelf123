@@ -95,7 +95,7 @@ model Payment {
   productType     String   // 1_chapter, 5_chapters, 10_chapters, subscription
   creditsAdded    Int      @default(0)
   provider        String   @default("freedompay")
-  pgOrderId       String?
+  pgOrderId       String?  @unique
   pgPaymentId     String?
   pgRecurringProfile String?
   rawPayload      Json?
