@@ -270,25 +270,24 @@ export async function initPayment(
 ): Promise<FreedomPayResponse> {
   const pg_salt = randomSalt();
 
-  // Map language codes
-  const pgLanguage = params.language === "kz" ? "kz" : params.language === "ru" ? "ru" : "en";
+  const pgLanguage =
+    params.language === "kz" ? "kz" : params.language === "ru" ? "ru" : "en";
 
-  // Build request parameters (alphabetically sorted keys matter for signature!)
+  // Whitelist only official pg_* parameters for init_payment.php
   const requestParams: Record<string, string> = {
-    pg_amount: String(Math.round(params.amount)),
-    pg_check_url: config.checkUrl,
-    pg_currency: params.currency || "KZT",
-    pg_description: params.description,
-    pg_failure_url: config.failureUrl,
-    pg_language: pgLanguage,
     pg_merchant_id: config.merchantId,
     pg_order_id: params.orderId,
-    pg_result_url: config.resultUrl,
+    pg_amount: String(params.amount),
+    pg_currency: params.currency || "KZT",
+    pg_description: params.description,
     pg_salt,
+    pg_language: pgLanguage,
+    pg_result_url: config.resultUrl,
     pg_success_url: config.successUrl,
+    pg_failure_url: config.failureUrl,
+    pg_check_url: config.checkUrl,
   };
 
-  // Add recurring parameters if requested
   if (params.recurringStart) {
     requestParams.pg_recurring_start = "1";
     if (params.recurringLifetime) {
