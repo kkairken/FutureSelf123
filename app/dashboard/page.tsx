@@ -97,13 +97,11 @@ export default function DashboardPage() {
               {user?.credits || 0}
             </div>
             <div className="text-sm text-foreground/70">{t.dashboard.stats.creditsRemaining}</div>
-            {user?.credits === 0 && (
-              <Link href="/pricing">
-                <Button size="sm" className="mt-4 w-full">
-                  {t.dashboard.stats.buyMore}
-                </Button>
-              </Link>
-            )}
+            <Link href="/pricing">
+              <Button size="sm" className="mt-4 w-full">
+                {t.dashboard.stats.buyMore}
+              </Button>
+            </Link>
           </div>
 
           <div className="p-6 bg-card border border-border rounded-xl">
