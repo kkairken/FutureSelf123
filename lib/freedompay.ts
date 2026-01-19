@@ -21,6 +21,7 @@ export interface FreedomPayConfig {
   secretKey: string;
   baseUrl: string;
   appUrl: string;
+  testMode: boolean;
   resultUrl: string;
   checkUrl: string;
   successUrl: string;
@@ -54,9 +55,12 @@ export interface FreedomPayResponse {
  * Validates that all required variables are set
  */
 export function getConfig(): FreedomPayConfig {
+  const testMode = String(process.env.FREEDOMPAY_TEST_MODE || "").toLowerCase() === "true";
   const merchantId = process.env.FREEDOMPAY_MERCHANT_ID;
   const secretKey = process.env.FREEDOMPAY_SECRET_KEY;
-  const baseUrl = process.env.FREEDOMPAY_GATEWAY_BASE || "https://api.freedompay.kz";
+  const baseUrl = testMode
+    ? "https://api.freedompay.money"
+    : process.env.FREEDOMPAY_GATEWAY_BASE || "https://api.freedompay.kz";
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
   if (!merchantId || !secretKey) {
@@ -70,6 +74,7 @@ export function getConfig(): FreedomPayConfig {
     secretKey,
     baseUrl,
     appUrl,
+    testMode,
     resultUrl: process.env.FREEDOMPAY_RESULT_URL || `${appUrl}/api/v1/payments/freedompay/result`,
     checkUrl: process.env.FREEDOMPAY_CHECK_URL || `${appUrl}/api/v1/payments/freedompay/check`,
     successUrl: process.env.FREEDOMPAY_SUCCESS_URL || `${appUrl}/payment/success?status=success`,
@@ -269,6 +274,13 @@ export async function initPayment(
   params: InitPaymentParams
 ): Promise<FreedomPayResponse> {
   const pg_salt = randomSalt();
+
+  console.log("[FreedomPay] Init config:", {
+    testMode: config.testMode,
+    merchantId: config.merchantId,
+    baseUrl: config.baseUrl,
+    secretKeyPrefix: config.secretKey.slice(0, 4),
+  });
 
   const pgLanguage =
     params.language === "kz" ? "kz" : params.language === "ru" ? "ru" : "en";
