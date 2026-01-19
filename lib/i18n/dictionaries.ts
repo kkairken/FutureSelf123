@@ -182,6 +182,11 @@ export type Dictionary = {
     createAnother: string;
     copyText: string;
     copied: string;
+    continuePromptTitle: string;
+    continuePromptBody: string;
+    continuePromptPlaceholder: string;
+    continuePromptConfirm: string;
+    continuePromptCancel: string;
   };
   pricing: {
     title: string;
@@ -528,6 +533,11 @@ export const dictionaries: Record<Locale, Dictionary> = {
       createAnother: "Create Another Chapter",
       copyText: "Copy Text",
       copied: "Copied to clipboard!",
+      continuePromptTitle: "Adjust the next chapter",
+      continuePromptBody: "Add a short note to influence the next chapter. Leave it blank to continue as planned.",
+      continuePromptPlaceholder: "Example: make the next chapter focus on a tough conversation with a mentor.",
+      continuePromptConfirm: "Continue",
+      continuePromptCancel: "Cancel",
     },
     pricing: {
       title: "Choose Your Path",
@@ -905,6 +915,11 @@ export const dictionaries: Record<Locale, Dictionary> = {
       createAnother: "Создать ещё главу",
       copyText: "Копировать текст",
       copied: "Скопировано!",
+      continuePromptTitle: "Измени следующую главу",
+      continuePromptBody: "Добавь короткую заметку, чтобы повлиять на следующую главу. Оставь пустым, чтобы продолжить как есть.",
+      continuePromptPlaceholder: "Например: пусть следующая глава будет про сложный разговор с наставником.",
+      continuePromptConfirm: "Продолжить",
+      continuePromptCancel: "Отмена",
     },
     pricing: {
       title: "Выбери свой путь",
@@ -1282,6 +1297,11 @@ export const dictionaries: Record<Locale, Dictionary> = {
       createAnother: "Тағы бір тарау жасау",
       copyText: "Мәтінді көшіру",
       copied: "Көшірілді!",
+      continuePromptTitle: "Келесі тарауды өзгерту",
+      continuePromptBody: "Келесі тарауға әсер ету үшін қысқа белгі қалдыр. Бос қалдырсаң, әдеттегідей жалғасады.",
+      continuePromptPlaceholder: "Мысалы: келесі тарау тәлімгермен қиын әңгіме туралы болсын.",
+      continuePromptConfirm: "Жалғастыру",
+      continuePromptCancel: "Бас тарту",
     },
     pricing: {
       title: "Жолыңды таңда",

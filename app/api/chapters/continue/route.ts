@@ -6,6 +6,10 @@ import { generateChapterContinuation, generateStorySummary } from "@/lib/openai"
 export const runtime = "edge";
 
 export async function POST(request: Request) {
+  let bookId: string | null = null;
+  let userId: string | null = null;
+  let createdChapterId: string | null = null;
+
   try {
     const authHeader = request.headers.get("Authorization");
 
@@ -19,12 +23,15 @@ export async function POST(request: Request) {
     if (!user) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
+    userId = user.id;
 
     if (user.credits < 1) {
       return NextResponse.json({ error: "Insufficient credits" }, { status: 403 });
     }
 
-    const { bookId } = await request.json();
+    const body = await request.json();
+    bookId = body.bookId;
+    const continuationNote = typeof body.continuationNote === "string" ? body.continuationNote.trim() : "";
 
     if (!bookId) {
       return NextResponse.json({ error: "Book ID required" }, { status: 400 });
@@ -60,6 +67,7 @@ export async function POST(request: Request) {
         status: "generating",
       },
     });
+    createdChapterId = chapter.id;
 
     await prisma.book.update({
       where: { id: book.id },
@@ -83,6 +91,7 @@ export async function POST(request: Request) {
       previousContent: lastChapter?.content || "",
       storySummary: book.summary || "",
       lastChapterSummary: book.lastChapterSummary || "",
+      continuationNote: continuationNote || undefined,
       chapterNumber: nextNumber,
     });
 
@@ -118,6 +127,21 @@ export async function POST(request: Request) {
     if ((error as any)?.message?.includes("OPENAI_API_KEY")) {
       return NextResponse.json({ error: "OpenAI key missing" }, { status: 500 });
     }
+
+    if (createdChapterId) {
+      return NextResponse.json({ success: true, chapterId: createdChapterId, warning: "partial_failure" });
+    }
+
+    if (bookId && userId) {
+      const latest = await prisma.chapter.findFirst({
+        where: { bookId, userId },
+        orderBy: { chapterNumber: "desc" },
+      });
+      if (latest?.id) {
+        return NextResponse.json({ success: true, chapterId: latest.id, warning: "fallback" });
+      }
+    }
+
     return NextResponse.json({ error: "Failed to continue chapter" }, { status: 500 });
   }
 }

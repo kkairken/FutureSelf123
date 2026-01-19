@@ -28,6 +28,7 @@ interface ChapterInput {
   chapterNumber?: number;
   storySummary?: string;
   lastChapterSummary?: string;
+  continuationNote?: string;
 }
 
 const languageInstructions: Record<string, string> = {
@@ -121,6 +122,9 @@ ${input.storySummary || "No prior summary available."}
 
 LAST CHAPTER SUMMARY:
 ${input.lastChapterSummary || input.previousContent?.slice(0, 800) || "No last chapter summary available."}
+
+OPTIONAL USER GUIDANCE (follow if provided, keep consistent):
+${input.continuationNote || "None."}
 
 ANCHORS (keep consistent, do not restate):
 Name: ${input.name}

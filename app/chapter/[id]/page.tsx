@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/Button";
+import { Textarea } from "@/components/Textarea";
 import { toast } from "@/components/Toaster";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { formatString } from "@/lib/i18n/format";
@@ -17,6 +18,8 @@ export default function ChapterPage() {
   const [loading, setLoading] = useState(true);
   const [continuing, setContinuing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [showContinueModal, setShowContinueModal] = useState(false);
+  const [continuationNote, setContinuationNote] = useState("");
 
   const archetypeLabels: Record<string, string> = {
     creator: t.archetypes.creator,
@@ -187,7 +190,7 @@ export default function ChapterPage() {
     );
   }
 
-  const handleContinue = async () => {
+  const handleContinue = async (note?: string) => {
     if (!chapter.book?.id) {
       router.push("/create");
       return;
@@ -201,7 +204,7 @@ export default function ChapterPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ bookId: chapter.book.id }),
+        body: JSON.stringify({ bookId: chapter.book.id, continuationNote: note || "" }),
       });
       const data = await res.json();
       if (res.ok && data.chapterId) {
@@ -287,7 +290,7 @@ export default function ChapterPage() {
         >
           <p className="text-foreground/70 mb-6">{t.chapter.readDaily}</p>
           <div className="flex gap-4 justify-center">
-            <Button onClick={handleContinue} loading={continuing}>
+            <Button onClick={() => setShowContinueModal(true)} loading={continuing}>
               {t.chapter.createAnother}
             </Button>
             <Button
@@ -302,6 +305,50 @@ export default function ChapterPage() {
           </div>
         </motion.div>
       </div>
+
+      {showContinueModal && !continuing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowContinueModal(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative w-full max-w-lg bg-card border border-border rounded-2xl p-6"
+          >
+            <h3 className="text-xl font-bold mb-2">{t.chapter.continuePromptTitle}</h3>
+            <p className="text-sm text-foreground/70 mb-4">{t.chapter.continuePromptBody}</p>
+            <Textarea
+              placeholder={t.chapter.continuePromptPlaceholder}
+              value={continuationNote}
+              onChange={(e) => setContinuationNote(e.target.value)}
+              rows={4}
+            />
+            <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:justify-end">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setContinuationNote("");
+                  setShowContinueModal(false);
+                }}
+              >
+                {t.chapter.continuePromptCancel}
+              </Button>
+              <Button
+                onClick={() => {
+                  const note = continuationNote.trim();
+                  setShowContinueModal(false);
+                  setContinuationNote("");
+                  handleContinue(note);
+                }}
+              >
+                {t.chapter.continuePromptConfirm}
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

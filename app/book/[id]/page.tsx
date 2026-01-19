@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/Button";
+import { Textarea } from "@/components/Textarea";
 import { toast } from "@/components/Toaster";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -17,6 +18,8 @@ export default function BookPage() {
   const [loading, setLoading] = useState(true);
   const [continuing, setContinuing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [showContinueModal, setShowContinueModal] = useState(false);
+  const [continuationNote, setContinuationNote] = useState("");
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -64,7 +67,7 @@ export default function BookPage() {
     return () => clearInterval(interval);
   }, [continuing]);
 
-  const handleContinue = async () => {
+  const handleContinue = async (note?: string) => {
     setContinuing(true);
     try {
       const token = localStorage.getItem("auth_token");
@@ -74,7 +77,7 @@ export default function BookPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ bookId: book.id }),
+        body: JSON.stringify({ bookId: book.id, continuationNote: note || "" }),
       });
       const data = await res.json();
       if (res.ok && data.chapterId) {
@@ -175,7 +178,7 @@ export default function BookPage() {
           className="mb-8 flex flex-col sm:flex-row gap-4"
         >
           <Button
-            onClick={handleContinue}
+            onClick={() => setShowContinueModal(true)}
             loading={continuing}
             className="w-full sm:w-auto"
           >
@@ -234,6 +237,50 @@ export default function BookPage() {
           ))}
         </div>
       </div>
+
+      {showContinueModal && !continuing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowContinueModal(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative w-full max-w-lg bg-card border border-border rounded-2xl p-6"
+          >
+            <h3 className="text-xl font-bold mb-2">{t.chapter.continuePromptTitle}</h3>
+            <p className="text-sm text-foreground/70 mb-4">{t.chapter.continuePromptBody}</p>
+            <Textarea
+              placeholder={t.chapter.continuePromptPlaceholder}
+              value={continuationNote}
+              onChange={(e) => setContinuationNote(e.target.value)}
+              rows={4}
+            />
+            <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:justify-end">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setContinuationNote("");
+                  setShowContinueModal(false);
+                }}
+              >
+                {t.chapter.continuePromptCancel}
+              </Button>
+              <Button
+                onClick={() => {
+                  const note = continuationNote.trim();
+                  setShowContinueModal(false);
+                  setContinuationNote("");
+                  handleContinue(note);
+                }}
+              >
+                {t.chapter.continuePromptConfirm}
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }
