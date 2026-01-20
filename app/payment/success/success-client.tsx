@@ -12,16 +12,56 @@ export default function PaymentSuccessClient() {
   const searchParams = useSearchParams();
   const { t } = useLanguage();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const [creditsAdded, setCreditsAdded] = useState<number | null>(null);
 
   useEffect(() => {
     const statusParam = searchParams.get("status");
+    const orderId = searchParams.get("pg_order_id");
+    const paymentId = searchParams.get("pg_payment_id");
+
     if (statusParam === "failed") {
       setStatus("error");
       return;
     }
 
-    setStatus("success");
-    toast.success(t.payment.successTitle);
+    // If success, try to apply credits via API
+    if (statusParam === "success" && (orderId || paymentId)) {
+      const token = localStorage.getItem("auth_token");
+      if (token) {
+        // Call API to complete payment and apply credits
+        fetch("/api/v1/payments/status", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            order_id: orderId,
+            payment_id: paymentId,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("Payment status response:", data);
+            if (data.creditsAdded) {
+              setCreditsAdded(data.creditsAdded);
+            }
+            setStatus("success");
+            toast.success(t.payment.successTitle);
+          })
+          .catch((err) => {
+            console.error("Failed to apply credits:", err);
+            setStatus("success"); // Still show success, credits might be applied via callback
+            toast.success(t.payment.successTitle);
+          });
+      } else {
+        setStatus("success");
+        toast.success(t.payment.successTitle);
+      }
+    } else {
+      setStatus("success");
+      toast.success(t.payment.successTitle);
+    }
   }, [searchParams, t.payment.successTitle]);
 
   return (
@@ -42,7 +82,14 @@ export default function PaymentSuccessClient() {
           <>
             <div className="text-6xl mb-4">🎉</div>
             <h1 className="text-3xl font-bold mb-4">{t.payment.successTitle}</h1>
-            <p className="text-foreground/70 mb-8">{t.payment.successBody}</p>
+            <p className="text-foreground/70 mb-8">
+              {t.payment.successBody}
+              {creditsAdded && (
+                <span className="block mt-2 text-green-500 font-semibold">
+                  +{creditsAdded} {t.common?.credits || "credits"}
+                </span>
+              )}
+            </p>
             <div className="flex gap-4 justify-center">
               <Button onClick={() => router.push("/create")}>
                 {t.payment.createChapter}

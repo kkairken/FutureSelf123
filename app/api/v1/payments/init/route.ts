@@ -157,36 +157,7 @@ export async function POST(request: Request) {
       PRODUCT_NAMES[productType]?.en ||
       `Purchase: ${productType}`;
 
-    // 7. Check for existing pending payment with same parameters (idempotency)
-    const existingPayment = await prisma.payment.findFirst({
-      where: {
-        userId: user.id,
-        productType,
-        status: "pending",
-        createdAt: {
-          // Only check payments from last 30 minutes
-          gte: new Date(Date.now() - 30 * 60 * 1000),
-        },
-      },
-    });
-
-    if (existingPayment && existingPayment.rawPayload) {
-      const payload = existingPayment.rawPayload as Record<string, string>;
-      if (payload.pg_redirect_url) {
-        console.log("[Payment Init] Returning existing pending payment:", {
-          paymentId: existingPayment.id,
-          pgOrderId: existingPayment.pgOrderId,
-        });
-        return NextResponse.json({
-          redirect_url: payload.pg_redirect_url,
-          pg_payment_id: existingPayment.pgPaymentId,
-          pg_order_id: existingPayment.pgOrderId,
-          existing: true,
-        });
-      }
-    }
-
-    // 8. Create payment record in database (pending)
+    // 7. Create payment record in database (pending)
     const payment = await prisma.payment.create({
       data: {
         userId: user.id,
