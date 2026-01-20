@@ -209,19 +209,28 @@ export function normalizeParams(params: Params): Record<string, string> {
 /**
  * Parse XML response from FreedomPay to object
  */
+function decodeXmlEntities(value: string) {
+  return value
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, "\"")
+    .replace(/&apos;/g, "'");
+}
+
 export function parseXmlToObject(xml: string): Record<string, string> {
   const result: Record<string, string> = {};
+  const cleaned = xml.replace(/^\uFEFF/, "").replace(/<\?xml[^>]*\?>/i, "").trim();
   const regex = /<([a-zA-Z0-9_:-]+)>([\s\S]*?)<\/\1>/g;
   let match: RegExpExecArray | null;
 
-  while ((match = regex.exec(xml)) !== null) {
+  while ((match = regex.exec(cleaned)) !== null) {
     const tag = match[1];
-    const value = match[2].trim();
-    // Skip nested tags
-    if (value.includes("<")) {
+    const rawValue = match[2].trim();
+    if (rawValue.includes("<")) {
       continue;
     }
-    result[tag] = value;
+    result[tag] = decodeXmlEntities(rawValue);
   }
 
   return result;
