@@ -1,12 +1,14 @@
 /**
- * Check payment status and manually apply credits if needed
+ * Check payment status and apply credits if payment confirmed by FreedomPay
  *
- * GET /api/v1/payments/status?order_id=xxx
+ * GET /api/v1/payments/status?order_id=xxx - check status
+ * POST /api/v1/payments/status - verify with FreedomPay and apply credits
  */
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getUserFromToken } from "@/lib/auth";
+import { getConfig, checkPaymentStatus } from "@/lib/freedompay";
 import { applyCreditsIfNeeded } from "@/lib/payments";
 
 export const runtime = "nodejs";
@@ -55,7 +57,6 @@ export async function GET(request: Request) {
       pgOrderId: payment.pgOrderId,
       pgPaymentId: payment.pgPaymentId,
       createdAt: payment.createdAt,
-      rawPayload: payment.rawPayload,
     });
   } catch (error) {
     console.error("[Payment Status] Error:", error);
@@ -63,7 +64,7 @@ export async function GET(request: Request) {
   }
 }
 
-// POST to manually complete payment and apply credits (for testing)
+// POST to verify payment with FreedomPay and apply credits
 export async function POST(request: Request) {
   try {
     const authHeader = request.headers.get("Authorization");
@@ -86,6 +87,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "order_id or payment_id required" }, { status: 400 });
     }
 
+    // Find payment in our database
     const payment = await prisma.payment.findFirst({
       where: {
         userId: user.id,
@@ -100,14 +102,59 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Payment not found" }, { status: 404 });
     }
 
+    // Already completed - return current state
     if (payment.status === "completed" && payment.creditsAdded > 0) {
       return NextResponse.json({
         message: "Already completed",
         creditsAdded: payment.creditsAdded,
+        status: payment.status,
       });
     }
 
-    // Mark as completed and apply credits
+    // SECURITY: Verify payment status with FreedomPay API
+    let config;
+    try {
+      config = getConfig();
+    } catch (error) {
+      console.error("[Payment Status] Config error:", error);
+      return NextResponse.json({ error: "Payment system not configured" }, { status: 500 });
+    }
+
+    console.log("[Payment Status] Checking with FreedomPay:", {
+      orderId: payment.pgOrderId,
+      paymentId: payment.pgPaymentId,
+    });
+
+    const fpStatus = await checkPaymentStatus(config, {
+      orderId: payment.pgOrderId || undefined,
+      paymentId: payment.pgPaymentId || undefined,
+    });
+
+    console.log("[Payment Status] FreedomPay response:", fpStatus);
+
+    // Check if payment is actually successful in FreedomPay
+    const isSuccess =
+      fpStatus.status === "ok" &&
+      (fpStatus.paymentStatus === "success" || fpStatus.paymentStatus === "ok");
+
+    if (!isSuccess) {
+      // Update payment status if it failed
+      if (fpStatus.paymentStatus === "failed" || fpStatus.paymentStatus === "error") {
+        await prisma.payment.update({
+          where: { id: payment.id },
+          data: { status: "failed" },
+        });
+      }
+
+      return NextResponse.json({
+        message: "Payment not confirmed by FreedomPay",
+        fpStatus: fpStatus.status,
+        fpPaymentStatus: fpStatus.paymentStatus,
+        status: payment.status,
+      });
+    }
+
+    // Payment confirmed - mark as completed and apply credits
     await prisma.payment.update({
       where: { id: payment.id },
       data: { status: "completed" },
@@ -124,13 +171,20 @@ export async function POST(request: Request) {
       select: { credits: true },
     });
 
-    return NextResponse.json({
-      message: "Credits applied",
+    console.log("[Payment Status] Credits applied:", {
+      paymentId: payment.id,
       creditsAdded: updatedPayment?.creditsAdded,
       totalCredits: updatedUser?.credits,
     });
+
+    return NextResponse.json({
+      message: "Payment verified and credits applied",
+      creditsAdded: updatedPayment?.creditsAdded,
+      totalCredits: updatedUser?.credits,
+      status: "completed",
+    });
   } catch (error) {
     console.error("[Payment Status] Error:", error);
-    return NextResponse.json({ error: "Failed to apply credits" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to verify payment" }, { status: 500 });
   }
 }

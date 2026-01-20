@@ -355,6 +355,42 @@ export async function initPayment(
   return postForm(config.baseUrl, "init_payment", payload);
 }
 
+/**
+ * Check payment status via FreedomPay API
+ * https://docs.freedompay.kz/ - get_status endpoint
+ */
+export async function checkPaymentStatus(
+  config: FreedomPayConfig,
+  params: { orderId?: string; paymentId?: string }
+): Promise<{ status: string; paymentStatus?: string; amount?: string }> {
+  const pg_salt = randomSalt();
+
+  const requestParams: Record<string, string> = {
+    pg_merchant_id: config.merchantId,
+    pg_salt,
+  };
+
+  if (params.orderId) {
+    requestParams.pg_order_id = params.orderId;
+  }
+  if (params.paymentId) {
+    requestParams.pg_payment_id = params.paymentId;
+  }
+
+  const pg_sig = buildSig("get_status", requestParams, config.secretKey);
+  const payload = { ...requestParams, pg_sig };
+
+  const response = await postForm(config.baseUrl, "get_status", payload);
+
+  console.log("[FreedomPay] get_status response:", response.parsed);
+
+  return {
+    status: response.parsed.pg_status || "error",
+    paymentStatus: response.parsed.pg_payment_status,
+    amount: response.parsed.pg_amount,
+  };
+}
+
 // =============================================================================
 // RESPONSE XML BUILDER
 // =============================================================================
