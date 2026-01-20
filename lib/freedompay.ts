@@ -35,6 +35,7 @@ export interface InitPaymentParams {
   description: string;
   currency?: string;
   language?: string;
+  userId?: string; // Required for recurring payments (pg_user_id)
   // Recurring payment options
   recurringStart?: boolean;
   recurringLifetime?: number; // months (1-156)
@@ -340,6 +341,10 @@ export async function initPayment(
     requestParams.pg_recurring_start = "1";
     if (params.recurringLifetime) {
       requestParams.pg_recurring_lifetime = String(params.recurringLifetime);
+    }
+    // pg_user_id is REQUIRED for recurring payments
+    if (params.userId) {
+      requestParams.pg_user_id = params.userId;
     }
   }
 

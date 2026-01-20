@@ -70,17 +70,17 @@ const PRODUCTS: Record<string, Product> = {
   },
 };
 
-// Product names by language
+// Product names by language (shown on FreedomPay payment page)
 const PRODUCT_NAMES: Record<string, Record<string, string>> = {
   "1_chapter": {
     en: "7 chapters",
-    ru: "7 кредитов",
+    ru: "7 глав",
     kz: "7 тарау",
   },
   "5_chapters": {
-    en: "5 chapters",
-    ru: "5 глав",
-    kz: "5 тарау",
+    en: "20 chapters",
+    ru: "20 глав",
+    kz: "20 тарау",
   },
   "10_chapters": {
     en: "40 chapters",
@@ -214,6 +214,7 @@ export async function POST(request: Request) {
       amount: product.amount,
       description,
       language,
+      userId: user.id, // Required for recurring payments (pg_user_id)
       recurringStart: product.isSubscription,
       recurringLifetime: product.recurringLifetime,
     });
