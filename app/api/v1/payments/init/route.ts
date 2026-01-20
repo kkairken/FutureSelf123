@@ -30,6 +30,7 @@ import {
   initPayment,
   generateOrderId,
   getErrorDescription,
+  parseXmlToObject,
 } from "@/lib/freedompay";
 
 export const runtime = "nodejs";
@@ -217,10 +218,14 @@ export async function POST(request: Request) {
       recurringLifetime: product.recurringLifetime,
     });
 
+    const parsed = response.parsed.pg_status
+      ? response.parsed
+      : parseXmlToObject(response.raw);
+
     // 10. Handle response
-    const pg_status = response.parsed.pg_status;
-    const pg_error_code = response.parsed.pg_error_code;
-    const pg_error_description = response.parsed.pg_error_description;
+    const pg_status = parsed.pg_status;
+    const pg_error_code = parsed.pg_error_code;
+    const pg_error_description = parsed.pg_error_description;
 
     if (pg_status !== "ok") {
       console.error("[Payment Init] FreedomPay error:", {
@@ -237,7 +242,7 @@ export async function POST(request: Request) {
         where: { id: payment.id },
         data: {
           status: "failed",
-          rawPayload: response.parsed,
+          rawPayload: parsed,
         },
       });
 
@@ -257,8 +262,8 @@ export async function POST(request: Request) {
       );
     }
 
-    const pg_payment_id = response.parsed.pg_payment_id;
-    const redirect_url = response.parsed.pg_redirect_url;
+    const pg_payment_id = parsed.pg_payment_id;
+    const redirect_url = parsed.pg_redirect_url;
 
     if (!redirect_url) {
       console.error("[Payment Init] No redirect URL in response:", response.parsed);
@@ -266,7 +271,7 @@ export async function POST(request: Request) {
         where: { id: payment.id },
         data: {
           status: "failed",
-          rawPayload: response.parsed,
+          rawPayload: parsed,
         },
       });
       return NextResponse.json(
@@ -280,7 +285,7 @@ export async function POST(request: Request) {
       where: { id: payment.id },
       data: {
         pgPaymentId: pg_payment_id || null,
-        rawPayload: response.parsed,
+        rawPayload: parsed,
       },
     });
 
