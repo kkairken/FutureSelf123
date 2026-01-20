@@ -46,11 +46,23 @@ interface Product {
 }
 
 const PRODUCTS: Record<string, Product> = {
-  "1_chapter": { amount: 1000, credits: 7, isSubscription: false },
-  "5_chapters": { amount: 2000, credits: 20, isSubscription: false },
-  "10_chapters": { amount: 5000, credits: 40, isSubscription: false },
+  "1_chapter": {
+    amount: Number(process.env.PRICE_7_KZT) || 1000,
+    credits: 7,
+    isSubscription: false,
+  },
+  "5_chapters": {
+    amount: Number(process.env.PRICE_20_KZT) || 2000,
+    credits: 20,
+    isSubscription: false,
+  },
+  "10_chapters": {
+    amount: Number(process.env.PRICE_40_KZT) || 3900,
+    credits: 40,
+    isSubscription: false,
+  },
   "subscription_100": {
-    amount: 6000,
+    amount: Number(process.env.PRICE_100_KZT) || 6000,
     credits: 100,
     isSubscription: true,
     recurringLifetime: 12, // 12 months

@@ -21,6 +21,8 @@ export interface FreedomPayConfig {
   secretKey: string;
   baseUrl: string;
   appUrl: string;
+  testingMode: "0" | "1";
+  requestMethod: "GET" | "POST" | "XML";
   resultUrl: string;
   checkUrl: string;
   successUrl: string;
@@ -58,6 +60,13 @@ export function getConfig(): FreedomPayConfig {
   const secretKey = process.env.FREEDOMPAY_SECRET_KEY;
   const baseUrl = "https://api.freedompay.kz";
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const testingMode =
+    process.env.FREEDOMPAY_TESTING_MODE === "1" ? "1" : "0";
+  const requestMethod =
+    process.env.FREEDOMPAY_REQUEST_METHOD === "GET" ||
+    process.env.FREEDOMPAY_REQUEST_METHOD === "XML"
+      ? process.env.FREEDOMPAY_REQUEST_METHOD
+      : "POST";
 
   if (!merchantId || !secretKey) {
     throw new Error(
@@ -70,6 +79,8 @@ export function getConfig(): FreedomPayConfig {
     secretKey,
     baseUrl,
     appUrl,
+    testingMode,
+    requestMethod,
     resultUrl: process.env.FREEDOMPAY_RESULT_URL || `${appUrl}/api/v1/payments/freedompay/result`,
     checkUrl: process.env.FREEDOMPAY_CHECK_URL || `${appUrl}/api/v1/payments/freedompay/check`,
     successUrl: process.env.FREEDOMPAY_SUCCESS_URL || `${appUrl}/payment/success?status=success`,
@@ -277,7 +288,15 @@ export async function initPayment(
   });
 
   const pgLanguage =
-    params.language === "kz" ? "kz" : params.language === "ru" ? "ru" : "en";
+    params.language === "kk" || params.language === "kz"
+      ? "kk"
+      : params.language === "kg"
+        ? "kg"
+        : params.language === "uz"
+          ? "uz"
+          : params.language === "ru"
+            ? "ru"
+            : "en";
 
   // Whitelist only official pg_* parameters for init_payment.php
   const requestParams: Record<string, string> = {
@@ -293,6 +312,13 @@ export async function initPayment(
     pg_failure_url: config.failureUrl,
     pg_check_url: config.checkUrl,
   };
+
+  if (config.testingMode === "1") {
+    requestParams.pg_testing_mode = "1";
+  }
+  if (config.requestMethod) {
+    requestParams.pg_request_method = config.requestMethod;
+  }
 
   if (params.recurringStart) {
     requestParams.pg_recurring_start = "1";
