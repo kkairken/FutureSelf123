@@ -214,24 +214,31 @@ function decodeXmlEntities(value: string) {
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, "\"")
+    .replace(/&quot;/g, '"')
     .replace(/&apos;/g, "'");
 }
 
 export function parseXmlToObject(xml: string): Record<string, string> {
   const result: Record<string, string> = {};
+
+  // Remove BOM and XML declaration
   const cleaned = xml.replace(/^\uFEFF/, "").replace(/<\?xml[^>]*\?>/i, "").trim();
-  const regex = /<([a-zA-Z0-9_:-]+)>([\s\S]*?)<\/\1>/g;
+
+  // Extract content inside <response> tag if present
+  const responseMatch = cleaned.match(/<response>([\s\S]*?)<\/response>/i);
+  const content = responseMatch ? responseMatch[1] : cleaned;
+
+  // Find all simple tags (non-nested)
+  const regex = /<([a-zA-Z0-9_]+)>([^<]*)<\/\1>/g;
   let match: RegExpExecArray | null;
 
-  while ((match = regex.exec(cleaned)) !== null) {
+  while ((match = regex.exec(content)) !== null) {
     const tag = match[1];
     const rawValue = match[2].trim();
-    if (rawValue.includes("<")) {
-      continue;
-    }
     result[tag] = decodeXmlEntities(rawValue);
   }
+
+  console.log("[FreedomPay] Parsed XML:", result);
 
   return result;
 }
