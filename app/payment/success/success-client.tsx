@@ -86,7 +86,7 @@ export default function PaymentSuccessClient() {
               {t.payment.successBody}
               {creditsAdded && (
                 <span className="block mt-2 text-green-500 font-semibold">
-                  +{creditsAdded} {t.common?.credits || "credits"}
+                  +{creditsAdded} credits
                 </span>
               )}
             </p>
