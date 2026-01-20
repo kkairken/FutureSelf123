@@ -91,6 +91,8 @@ export async function POST(request: Request) {
     pg_payment_id: params.pg_payment_id,
     pg_payment_status: params.pg_payment_status,
     pg_result: params.pg_result,
+    pg_status: params.pg_status,
+    all_params: JSON.stringify(params),
   });
 
   // 2. Get script name for signature verification
@@ -118,7 +120,7 @@ export async function POST(request: Request) {
 
   // 5. Find existing payment record
   const payment = orderId
-    ? await prisma.payment.findUnique({
+    ? await prisma.payment.findFirst({
         where: { pgOrderId: orderId },
       })
     : null;

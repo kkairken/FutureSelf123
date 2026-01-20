@@ -96,7 +96,7 @@ export async function POST(request: Request) {
   }
 
   // 5. Check if payment exists in database
-  const payment = await prisma.payment.findUnique({
+  const payment = await prisma.payment.findFirst({
     where: { pgOrderId: orderId },
   });
 
