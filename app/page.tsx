@@ -32,7 +32,7 @@ export default function HomePage() {
   const plans = [
     { name: t.pricing.plans.single, price: "₸1,000", credits: 7, perMonth: false },
     { name: t.pricing.plans.starter, price: "₸2,000", credits: 20, perMonth: false },
-    { name: t.pricing.plans.bundle, price: "₸5,000", credits: 40, perMonth: false },
+    { name: t.pricing.plans.bundle, price: "₸3,900", credits: 40, perMonth: false },
     { name: t.pricing.plans.subscription, price: "₸6,000", credits: 100, perMonth: true },
   ];
 
