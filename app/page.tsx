@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/Button";
@@ -7,6 +8,26 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function HomePage() {
   const { t } = useLanguage();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+    if (token) {
+      // Verify token is valid
+      fetch("/api/auth/me", {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.user) {
+            setIsLoggedIn(true);
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
+
+  const ctaLink = isLoggedIn ? "/create" : "/auth/register";
 
   const plans = [
     { name: t.pricing.plans.single, price: "₸1,000", credits: 7, perMonth: false },
@@ -50,7 +71,7 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/register">
+            <Link href={ctaLink}>
               <Button size="lg">{t.home.cta.create}</Button>
             </Link>
             <Link href="/how-it-works">
@@ -175,7 +196,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12">
-            <Link href="/auth/register">
+            <Link href={ctaLink}>
               <Button
                 size="lg"
                 className="bg-accent text-white hover:bg-accent-dark"
