@@ -10,7 +10,11 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 export default function PricingPage() {
   const router = useRouter();
   const { t, locale } = useLanguage();
-  const [currency, setCurrency] = useState<"KZT" | "USD" | "EUR">("KZT");
+  const [currency, setCurrency] = useState<"KZT" | "USD" | "EUR">(() => {
+    // Default currency based on language
+    if (locale === "en") return "USD";
+    return "KZT";
+  });
   const [loading, setLoading] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
 
@@ -43,7 +47,9 @@ export default function PricingPage() {
     const converted = kzt * rateMap[currency];
     const step = roundingMap[currency];
     const rounded = Math.ceil(converted / step) * step;
-    return `${currencySymbol[currency]}${rounded.toLocaleString()}`;
+    // Use fixed formatting to avoid hydration mismatch
+    const formatted = rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return `${currencySymbol[currency]}${formatted}`;
   };
 
   const plans = useMemo(
@@ -109,6 +115,15 @@ export default function PricingPage() {
     [currency, t]
   );
 
+  // Set default currency based on language
+  useEffect(() => {
+    if (locale === "en") {
+      setCurrency("USD");
+    } else {
+      setCurrency("KZT");
+    }
+  }, [locale]);
+
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
     if (token) {
@@ -142,6 +157,7 @@ export default function PricingPage() {
         },
         body: JSON.stringify({
           product_type: productType,
+          currency: currency,
           language: locale,
         }),
       });

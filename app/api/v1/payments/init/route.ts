@@ -40,7 +40,7 @@ export const runtime = "nodejs";
 // =============================================================================
 
 interface Product {
-  amount: number;
+  amountKZT: number;
   credits: number;
   isSubscription: boolean;
   recurringLifetime?: number; // months
@@ -48,27 +48,51 @@ interface Product {
 
 const PRODUCTS: Record<string, Product> = {
   "1_chapter": {
-    amount: Number(process.env.PRICE_7_KZT) || 1000,
+    amountKZT: Number(process.env.PRICE_7_KZT) || 1000,
     credits: 7,
     isSubscription: false,
   },
   "5_chapters": {
-    amount: Number(process.env.PRICE_20_KZT) || 2000,
+    amountKZT: Number(process.env.PRICE_20_KZT) || 2000,
     credits: 20,
     isSubscription: false,
   },
   "10_chapters": {
-    amount: Number(process.env.PRICE_40_KZT) || 3900,
+    amountKZT: Number(process.env.PRICE_40_KZT) || 3900,
     credits: 40,
     isSubscription: false,
   },
   "subscription_100": {
-    amount: Number(process.env.PRICE_100_KZT) || 6000,
+    amountKZT: Number(process.env.PRICE_100_KZT) || 6000,
     credits: 100,
     isSubscription: true,
     recurringLifetime: 12, // 12 months
   },
 };
+
+// Currency exchange rates (KZT per 1 unit of foreign currency)
+const EXCHANGE_RATES: Record<string, number> = {
+  KZT: 1,
+  USD: Number(process.env.NEXT_PUBLIC_RATE_USD) || 470,
+  EUR: Number(process.env.NEXT_PUBLIC_RATE_EUR) || 510,
+};
+
+// Rounding steps for each currency
+const ROUNDING: Record<string, number> = {
+  KZT: Number(process.env.NEXT_PUBLIC_ROUND_KZT) || 10,
+  USD: Number(process.env.NEXT_PUBLIC_ROUND_USD) || 1,
+  EUR: Number(process.env.NEXT_PUBLIC_ROUND_EUR) || 1,
+};
+
+/**
+ * Convert KZT amount to target currency
+ */
+function convertCurrency(amountKZT: number, currency: string): number {
+  const rate = EXCHANGE_RATES[currency] || 1;
+  const step = ROUNDING[currency] || 1;
+  const converted = amountKZT / rate;
+  return Math.ceil(converted / step) * step;
+}
 
 // Product names by language (shown on FreedomPay payment page)
 const PRODUCT_NAMES: Record<string, Record<string, string>> = {
@@ -117,6 +141,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const productType = String(body.product_type || "").trim();
     const language = String(body.language || "ru").trim();
+    const currency = ["KZT", "USD", "EUR"].includes(body.currency) ? body.currency : "KZT";
 
     // 3. Validate product
     const product = PRODUCTS[productType];
@@ -157,12 +182,15 @@ export async function POST(request: Request) {
       PRODUCT_NAMES[productType]?.en ||
       `Purchase: ${productType}`;
 
-    // 7. Create payment record in database (pending)
+    // 7. Calculate amount in selected currency
+    const amount = convertCurrency(product.amountKZT, currency);
+
+    // 8. Create payment record in database (pending)
     const payment = await prisma.payment.create({
       data: {
         userId: user.id,
-        amount: Math.round(product.amount * 100), // Store in cents
-        currency: "KZT",
+        amount: Math.round(amount * 100), // Store in cents/tiyn
+        currency: currency,
         status: "pending",
         productType,
         creditsAdded: 0,
@@ -175,14 +203,17 @@ export async function POST(request: Request) {
     console.log("[Payment Init] Starting payment:", {
       userId: user.id,
       productType,
-      amount: product.amount,
+      amount,
+      currency,
+      amountKZT: product.amountKZT,
       isSubscription: product.isSubscription,
       orderId,
     });
 
     const response = await initPayment(config, {
       orderId,
-      amount: product.amount,
+      amount,
+      currency,
       description,
       language,
       userId: user.id, // Required for recurring payments (pg_user_id)

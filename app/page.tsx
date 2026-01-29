@@ -50,7 +50,7 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/create">
+            <Link href="/auth/register">
               <Button size="lg">{t.home.cta.create}</Button>
             </Link>
             <Link href="/how-it-works">
@@ -175,7 +175,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12">
-            <Link href="/create">
+            <Link href="/auth/register">
               <Button
                 size="lg"
                 className="bg-accent text-white hover:bg-accent-dark"

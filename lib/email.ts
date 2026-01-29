@@ -1,5 +1,5 @@
 /**
- * Send magic link email via Resend
+ * Send emails via Resend
  * Resend: https://resend.com - Modern transactional email service
  *
  * Setup:
@@ -8,6 +8,169 @@
  * 3. Add to .env: RESEND_API_KEY=re_...
  * 4. (Optional) Add domain for production emails
  */
+
+export async function sendRegistrationEmail(
+  email: string,
+  token: string,
+  locale: "en" | "ru" | "kz" = "en"
+) {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const registrationLink = `${appUrl}/auth/complete-registration?token=${token}`;
+
+  const contentByLocale = {
+    en: {
+      subject: "Complete your registration - Future Self",
+      heading: "Welcome to Future Self!",
+      text: "Click the button below to complete your registration and set up your password. This link will expire in 15 minutes.",
+      button: "Complete Registration",
+      linkText: "Or copy this link:",
+      footer: "If you didn't request this email, you can safely ignore it.",
+    },
+    ru: {
+      subject: "Завершите регистрацию - Future Self",
+      heading: "Добро пожаловать в Future Self!",
+      text: "Нажмите кнопку ниже, чтобы завершить регистрацию и установить пароль. Ссылка действует 15 минут.",
+      button: "Завершить регистрацию",
+      linkText: "Или скопируйте ссылку:",
+      footer: "Если вы не запрашивали это письмо, просто проигнорируйте его.",
+    },
+    kz: {
+      subject: "Тіркелуді аяқтаңыз - Future Self",
+      heading: "Future Self-ке қош келдіңіз!",
+      text: "Тіркелуді аяқтау және құпия сөзді орнату үшін төмендегі батырманы басыңыз. Сілтеме 15 минутқа жарамды.",
+      button: "Тіркелуді аяқтау",
+      linkText: "Немесе осы сілтемені көшіріңіз:",
+      footer: "Егер бұл хатты сіз сұрамаған болсаңыз, оны елемей-ақ қойыңыз.",
+    },
+  };
+
+  const content = contentByLocale[locale] || contentByLocale.en;
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #ededed;
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 40px;
+            background: #151515;
+            border-radius: 12px;
+            border: 1px solid #262626;
+          }
+          .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(to right, #a78bfa, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+          }
+          h1 {
+            font-size: 28px;
+            margin: 20px 0;
+            color: #ededed;
+          }
+          p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #ccc;
+          }
+          .button {
+            display: inline-block;
+            padding: 16px 32px;
+            background: #8b5cf6;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            margin: 20px 0;
+          }
+          .link {
+            color: #8b5cf6;
+            word-break: break-all;
+          }
+          .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #262626;
+            font-size: 14px;
+            color: #666;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="logo">Future Self</div>
+          <h1>${content.heading}</h1>
+          <p>${content.text}</p>
+          <a href="${registrationLink}" class="button">${content.button}</a>
+          <p style="font-size: 14px; color: #888;">
+            ${content.linkText}<br/>
+            <span class="link">${registrationLink}</span>
+          </p>
+          <div class="footer">
+            <p>${content.footer}</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+
+  // Development mode: just log the link
+  if (!process.env.RESEND_API_KEY) {
+    console.log("\n========================================");
+    console.log("📧 REGISTRATION EMAIL (Resend not configured)");
+    console.log("========================================");
+    console.log("To:", email);
+    console.log("Subject:", content.subject);
+    console.log("Registration Link:", registrationLink);
+    console.log("========================================\n");
+    return;
+  }
+
+  // Production mode: send via Resend
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: process.env.EMAIL_FROM || "Future Self <onboarding@resend.dev>",
+        to: [email],
+        subject: content.subject,
+        html: html,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("Resend API error:", error);
+      throw new Error(`Failed to send email: ${response.status} ${error}`);
+    }
+
+    const data = await response.json();
+    console.log("✅ Registration email sent via Resend:", data.id);
+
+  } catch (error) {
+    console.error("Error sending email via Resend:", error);
+    console.log("🔗 Fallback registration link:", registrationLink);
+    throw error;
+  }
+}
 
 export async function sendMagicLinkEmail(
   email: string,

@@ -209,6 +209,57 @@ export default function BookPage() {
           </Button>
         </motion.div>
 
+        {/* Book Details - Answers to questions */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+          className="mb-10 p-6 bg-card border border-border rounded-xl"
+        >
+          <h2 className="text-xl font-bold mb-6">{t.book.details}</h2>
+          <div className="space-y-5">
+            <div>
+              <div className="text-sm text-foreground/50 mb-1">{t.create.form.name}</div>
+              <div className="text-foreground">{book.name}</div>
+            </div>
+            <div>
+              <div className="text-sm text-foreground/50 mb-1">{t.create.form.currentLife}</div>
+              <div className="text-foreground whitespace-pre-wrap">{book.currentLife}</div>
+            </div>
+            <div>
+              <div className="text-sm text-foreground/50 mb-1">{t.create.form.pastEvents}</div>
+              <div className="text-foreground whitespace-pre-wrap">{book.pastEvents}</div>
+            </div>
+            <div>
+              <div className="text-sm text-foreground/50 mb-1">{t.create.form.fears}</div>
+              <div className="text-foreground whitespace-pre-wrap">{book.fears}</div>
+            </div>
+            <div>
+              <div className="text-sm text-foreground/50 mb-1">{t.create.form.futureVision}</div>
+              <div className="text-foreground whitespace-pre-wrap">{book.futureVision}</div>
+            </div>
+            <div className="flex flex-wrap gap-6">
+              <div>
+                <div className="text-sm text-foreground/50 mb-1">{t.create.form.archetype}</div>
+                <div className="text-foreground">{t.archetypes[book.archetype as keyof typeof t.archetypes] || book.archetype}</div>
+              </div>
+              <div>
+                <div className="text-sm text-foreground/50 mb-1">{t.create.form.tone}</div>
+                <div className="text-foreground">{t.tones[book.tone as keyof typeof t.tones] || book.tone}</div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Chapters */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          <h2 className="text-xl font-bold mb-4">{t.book.chapters}</h2>
+        </motion.div>
+
         <div className="space-y-3">
           {book.chapters.map((chapter: any) => (
             <motion.div

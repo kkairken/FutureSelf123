@@ -65,7 +65,8 @@ export default function CompleteProfilePage() {
       if (res.ok) {
         setLocale(formData.language);
         toast.success(t.common.success);
-        router.push("/dashboard");
+        // Full page reload to update Header state
+        window.location.href = "/dashboard";
       } else {
         toast.error(t.common.error);
       }

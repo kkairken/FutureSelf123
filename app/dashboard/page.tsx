@@ -102,6 +102,25 @@ export default function DashboardPage() {
           <p className="text-foreground/70">{t.dashboard.tagline}</p>
         </motion.div>
 
+        {/* Actions - shows first on mobile */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="flex flex-col sm:flex-row gap-4 mb-6 md:hidden"
+        >
+          <Link href="/create" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto">{t.dashboard.books.startNew}</Button>
+          </Link>
+          {user?.credits === 0 && (
+            <Link href="/pricing" className="w-full sm:w-auto">
+              <Button variant="secondary" className="w-full sm:w-auto">
+                {t.dashboard.actions.getCredits}
+              </Button>
+            </Link>
+          )}
+        </motion.div>
+
         {/* Stats */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -114,11 +133,18 @@ export default function DashboardPage() {
               {user?.credits || 0}
             </div>
             <div className="text-sm text-foreground/70">{t.dashboard.stats.creditsRemaining}</div>
-            <Link href="/pricing">
-              <Button size="sm" className="mt-4 w-full">
-                {t.dashboard.stats.buyMore}
-              </Button>
-            </Link>
+            <div className="flex flex-col gap-2 mt-4">
+              <Link href="/pricing">
+                <Button size="sm" className="w-full">
+                  {t.dashboard.stats.buyMore}
+                </Button>
+              </Link>
+              <Link href="/dashboard/transactions">
+                <Button size="sm" variant="secondary" className="w-full">
+                  {t.transactions.viewHistory}
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <div className="p-6 bg-card border border-border rounded-xl">
@@ -136,12 +162,12 @@ export default function DashboardPage() {
           </div>
         </motion.div>
 
-        {/* Actions */}
+        {/* Actions - shows on desktop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="flex flex-col sm:flex-row gap-4 mb-12"
+          className="hidden md:flex flex-col sm:flex-row gap-4 mb-12"
         >
           <Link href="/create" className="w-full sm:w-auto">
             <Button className="w-full sm:w-auto">{t.dashboard.books.startNew}</Button>

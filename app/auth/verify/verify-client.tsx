@@ -38,14 +38,14 @@ export default function VerifyClient() {
             setNextRoute("/auth/complete");
             setNextLabel(t.auth.verify.completeProfile);
             setTimeout(() => {
-              router.push("/auth/complete");
+              window.location.href = "/auth/complete";
             }, 1000);
           } else {
             toast.success(t.auth.verify.welcomeBack);
             setNextRoute("/dashboard");
             setNextLabel(t.auth.verify.goToDashboard);
             setTimeout(() => {
-              router.push("/dashboard");
+              window.location.href = "/dashboard";
             }, 1000);
           }
         } else {
@@ -80,7 +80,7 @@ export default function VerifyClient() {
             <p className="text-foreground/70">{t.auth.verify.redirecting}</p>
             {nextRoute && (
               <button
-                onClick={() => router.push(nextRoute)}
+                onClick={() => window.location.href = nextRoute}
                 className="mt-6 px-6 py-3 bg-accent hover:bg-accent-dark text-white rounded-lg transition-colors"
               >
                 {nextLabel}

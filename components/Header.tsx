@@ -63,7 +63,10 @@ export function Header() {
             </span>
           </Link>
 
+          {/* Theme & Language - always visible */}
           <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <LanguageSwitcher />
             <button
               onClick={() => setMobileOpen((open) => !open)}
               className="p-2 rounded-lg border border-border hover:bg-card transition-colors"
@@ -110,12 +113,20 @@ export function Header() {
                 </div>
               </>
             ) : (
-              <Link
-                href="/create"
-                className="px-4 py-2 bg-accent hover:bg-accent-dark text-white rounded-lg text-sm font-medium transition-colors"
-              >
-                {t.nav.getStarted}
-              </Link>
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/auth/login"
+                  className={navLinkClass}
+                >
+                  {t.nav.login}
+                </Link>
+                <Link
+                  href="/auth/register"
+                  className="px-4 py-2 bg-accent hover:bg-accent-dark text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  {t.nav.register}
+                </Link>
+              </div>
             )}
 
             <ThemeToggle />
@@ -152,18 +163,21 @@ export function Header() {
                 </button>
               </div>
             ) : (
-              <Link
-                href="/create"
-                className="block text-center px-4 py-2 bg-accent hover:bg-accent-dark text-white rounded-lg text-sm font-medium transition-colors"
-              >
-                {t.nav.getStarted}
-              </Link>
+              <div className="grid gap-2">
+                <Link
+                  href="/auth/login"
+                  className="block text-center px-4 py-2 border border-border rounded-lg text-sm font-medium transition-colors hover:bg-card"
+                >
+                  {t.nav.login}
+                </Link>
+                <Link
+                  href="/auth/register"
+                  className="block text-center px-4 py-2 bg-accent hover:bg-accent-dark text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  {t.nav.register}
+                </Link>
+              </div>
             )}
-
-            <div className="flex items-center gap-3">
-              <ThemeToggle />
-              <LanguageSwitcher />
-            </div>
           </div>
         )}
       </nav>

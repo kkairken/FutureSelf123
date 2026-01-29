@@ -24,7 +24,25 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       document.documentElement.lang = saved;
       return;
     }
-    document.documentElement.lang = defaultLocale;
+
+    // Detect browser language
+    const browserLang = navigator.language || (navigator as any).userLanguage || "";
+    const langCode = browserLang.split("-")[0].toLowerCase();
+
+    // Map browser language codes to supported locales
+    let detectedLocale: Locale = defaultLocale;
+    if (langCode === "ru") {
+      detectedLocale = "ru";
+    } else if (langCode === "kk" || langCode === "kz") {
+      detectedLocale = "kz";
+    } else if (langCode === "en") {
+      detectedLocale = "en";
+    }
+
+    setLocaleState(detectedLocale);
+    setT(getDictionary(detectedLocale));
+    document.documentElement.lang = detectedLocale;
+    localStorage.setItem("locale", detectedLocale);
   }, []);
 
   const setLocale = useCallback((newLocale: Locale) => {

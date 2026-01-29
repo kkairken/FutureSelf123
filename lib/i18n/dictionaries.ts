@@ -11,6 +11,8 @@ export type Dictionary = {
     dashboard: string;
     pricing: string;
     getStarted: string;
+    login: string;
+    register: string;
     logout: string;
     credits: string;
     themeLight: string;
@@ -106,6 +108,38 @@ export type Dictionary = {
         clickLink: string;
         checkSpam: string;
       };
+      login: {
+        title: string;
+        subtitle: string;
+        password: string;
+        passwordPlaceholder: string;
+        passwordRequired: string;
+        invalidCredentials: string;
+        submit: string;
+        noAccount: string;
+        registerLink: string;
+      };
+      register: {
+        title: string;
+        subtitle: string;
+        sendLink: string;
+        checkEmail: string;
+        clickLink: string;
+        userExists: string;
+        haveAccount: string;
+        loginLink: string;
+      };
+      completeRegistration: {
+        title: string;
+        subtitle: string;
+        confirmPassword: string;
+        passwordPlaceholder: string;
+        confirmPasswordPlaceholder: string;
+        nameRequired: string;
+        passwordMin: string;
+        passwordMismatch: string;
+        submit: string;
+      };
       verify: {
         verifying: string;
         success: string;
@@ -167,6 +201,10 @@ export type Dictionary = {
       archetype: string;
       tone: string;
     };
+  };
+  book: {
+    details: string;
+    chapters: string;
   };
   chapter: {
     title: string;
@@ -347,6 +385,24 @@ export type Dictionary = {
     philosophical: string;
     triumphant: string;
   };
+  transactions: {
+    title: string;
+    subtitle: string;
+    backToDashboard: string;
+    noTransactions: string;
+    noTransactionsDesc: string;
+    buyCredits: string;
+    statusCompleted: string;
+    statusPending: string;
+    statusFailed: string;
+    product7: string;
+    product20: string;
+    product40: string;
+    product100: string;
+    credits: string;
+    securePayment: string;
+    viewHistory: string;
+  };
   common: {
     loading: string;
     error: string;
@@ -362,6 +418,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       dashboard: "Dashboard",
       pricing: "Pricing",
       getStarted: "Get Started",
+      login: "Sign In",
+      register: "Sign Up",
       logout: "Logout",
       credits: "credits",
       themeLight: "Light theme",
@@ -455,7 +513,39 @@ export const dictionaries: Record<Locale, Dictionary> = {
         sendLink: "Send Magic Link",
         checkEmail: "Check your email!",
         clickLink: "Click the link in your email to sign in.",
-        checkSpam: "If you don’t see it, check your Spam folder.",
+        checkSpam: "If you don't see it, check your Spam folder.",
+      },
+      login: {
+        title: "Sign In",
+        subtitle: "Enter your email and password to access your account.",
+        password: "Password",
+        passwordPlaceholder: "Enter your password",
+        passwordRequired: "Password must be at least 6 characters",
+        invalidCredentials: "Invalid email or password",
+        submit: "Sign In",
+        noAccount: "Don't have an account?",
+        registerLink: "Sign Up",
+      },
+      register: {
+        title: "Create Account",
+        subtitle: "Enter your email to get started. We'll send you a link to complete registration.",
+        sendLink: "Send Registration Link",
+        checkEmail: "Check your email!",
+        clickLink: "Click the link in your email to complete registration.",
+        userExists: "Account already exists. Please sign in.",
+        haveAccount: "Already have an account?",
+        loginLink: "Sign In",
+      },
+      completeRegistration: {
+        title: "Complete Registration",
+        subtitle: "Set up your profile and password to finish.",
+        confirmPassword: "Confirm Password",
+        passwordPlaceholder: "Create a password (min 6 characters)",
+        confirmPasswordPlaceholder: "Confirm your password",
+        nameRequired: "Please enter your name",
+        passwordMin: "Password must be at least 6 characters",
+        passwordMismatch: "Passwords do not match",
+        submit: "Complete Registration",
       },
       verify: {
         verifying: "Verifying your link...",
@@ -518,6 +608,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
         archetype: "Archetype",
         tone: "Tone",
       },
+    },
+    book: {
+      details: "Your Story Details",
+      chapters: "Chapters",
     },
     chapter: {
       title: "Chapter: {name}",
@@ -731,6 +825,24 @@ export const dictionaries: Record<Locale, Dictionary> = {
       philosophical: "Philosophical & Deep",
       triumphant: "Triumphant & Victorious",
     },
+    transactions: {
+      title: "Transaction History",
+      subtitle: "All your payments and credit purchases",
+      backToDashboard: "Back",
+      noTransactions: "No transactions yet",
+      noTransactionsDesc: "Your payment history will appear here after your first purchase",
+      buyCredits: "Buy Credits",
+      statusCompleted: "Completed",
+      statusPending: "Pending",
+      statusFailed: "Failed",
+      product7: "7 Chapters",
+      product20: "20 Chapters",
+      product40: "40 Chapters",
+      product100: "Monthly Subscription",
+      credits: "credits",
+      securePayment: "All payments are securely processed via Freedom Pay",
+      viewHistory: "View History",
+    },
     common: {
       loading: "Loading...",
       error: "Error",
@@ -744,6 +856,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       dashboard: "Панель",
       pricing: "Тарифы",
       getStarted: "Начать",
+      login: "Войти",
+      register: "Регистрация",
       logout: "Выйти",
       credits: "кредитов",
       themeLight: "Светлая тема",
@@ -839,6 +953,38 @@ export const dictionaries: Record<Locale, Dictionary> = {
         clickLink: "Кликни на ссылку в письме для входа.",
         checkSpam: "Если письма нет, проверь папку «Спам».",
       },
+      login: {
+        title: "Войти",
+        subtitle: "Введите email и пароль для входа в аккаунт.",
+        password: "Пароль",
+        passwordPlaceholder: "Введите пароль",
+        passwordRequired: "Пароль должен быть минимум 6 символов",
+        invalidCredentials: "Неверный email или пароль",
+        submit: "Войти",
+        noAccount: "Нет аккаунта?",
+        registerLink: "Зарегистрироваться",
+      },
+      register: {
+        title: "Регистрация",
+        subtitle: "Введите email для начала. Мы отправим ссылку для завершения регистрации.",
+        sendLink: "Отправить ссылку",
+        checkEmail: "Проверьте почту!",
+        clickLink: "Перейдите по ссылке в письме для завершения регистрации.",
+        userExists: "Аккаунт уже существует. Войдите.",
+        haveAccount: "Уже есть аккаунт?",
+        loginLink: "Войти",
+      },
+      completeRegistration: {
+        title: "Завершение регистрации",
+        subtitle: "Заполните профиль и установите пароль.",
+        confirmPassword: "Подтвердите пароль",
+        passwordPlaceholder: "Создайте пароль (мин. 6 символов)",
+        confirmPasswordPlaceholder: "Повторите пароль",
+        nameRequired: "Введите имя",
+        passwordMin: "Пароль должен быть минимум 6 символов",
+        passwordMismatch: "Пароли не совпадают",
+        submit: "Завершить регистрацию",
+      },
       verify: {
         verifying: "Проверяем ссылку...",
         success: "Успешно!",
@@ -900,6 +1046,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
         archetype: "Архетип",
         tone: "Тон",
       },
+    },
+    book: {
+      details: "Детали истории",
+      chapters: "Главы",
     },
     chapter: {
       title: "Глава: {name}",
@@ -1113,6 +1263,24 @@ export const dictionaries: Record<Locale, Dictionary> = {
       philosophical: "Философский и глубокий",
       triumphant: "Триумфальный и победный",
     },
+    transactions: {
+      title: "История транзакций",
+      subtitle: "Все ваши платежи и покупки кредитов",
+      backToDashboard: "Назад",
+      noTransactions: "Транзакций пока нет",
+      noTransactionsDesc: "История платежей появится здесь после первой покупки",
+      buyCredits: "Купить кредиты",
+      statusCompleted: "Завершён",
+      statusPending: "В обработке",
+      statusFailed: "Ошибка",
+      product7: "7 глав",
+      product20: "20 глав",
+      product40: "40 глав",
+      product100: "Месячная подписка",
+      credits: "кредитов",
+      securePayment: "Все платежи безопасно обрабатываются через Freedom Pay",
+      viewHistory: "История",
+    },
     common: {
       loading: "Загрузка...",
       error: "Ошибка",
@@ -1126,6 +1294,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       dashboard: "Панель",
       pricing: "Бағалар",
       getStarted: "Бастау",
+      login: "Кіру",
+      register: "Тіркелу",
       logout: "Шығу",
       credits: "кредиттер",
       themeLight: "Жарық тақырып",
@@ -1221,6 +1391,38 @@ export const dictionaries: Record<Locale, Dictionary> = {
         clickLink: "Кіру үшін хатыңдағы сілтемені бас.",
         checkSpam: "Хат келмесе, «Спам» қалтасын тексер.",
       },
+      login: {
+        title: "Кіру",
+        subtitle: "Аккаунтқа кіру үшін email мен құпия сөзді енгізіңіз.",
+        password: "Құпия сөз",
+        passwordPlaceholder: "Құпия сөзді енгізіңіз",
+        passwordRequired: "Құпия сөз кемінде 6 таңба болуы керек",
+        invalidCredentials: "Қате email немесе құпия сөз",
+        submit: "Кіру",
+        noAccount: "Аккаунт жоқ па?",
+        registerLink: "Тіркелу",
+      },
+      register: {
+        title: "Тіркелу",
+        subtitle: "Бастау үшін email енгізіңіз. Тіркелуді аяқтау үшін сілтеме жібереміз.",
+        sendLink: "Сілтеме жіберу",
+        checkEmail: "Поштаңызды тексеріңіз!",
+        clickLink: "Тіркелуді аяқтау үшін хаттағы сілтемені басыңыз.",
+        userExists: "Аккаунт бар. Кіріңіз.",
+        haveAccount: "Аккаунт бар ма?",
+        loginLink: "Кіру",
+      },
+      completeRegistration: {
+        title: "Тіркелуді аяқтау",
+        subtitle: "Профильді толтырып, құпия сөз орнатыңыз.",
+        confirmPassword: "Құпия сөзді растау",
+        passwordPlaceholder: "Құпия сөз жасаңыз (мин. 6 таңба)",
+        confirmPasswordPlaceholder: "Құпия сөзді қайталаңыз",
+        nameRequired: "Атыңызды енгізіңіз",
+        passwordMin: "Құпия сөз кемінде 6 таңба болуы керек",
+        passwordMismatch: "Құпия сөздер сәйкес келмейді",
+        submit: "Тіркелуді аяқтау",
+      },
       verify: {
         verifying: "Сілтемені тексеріп жатырмыз...",
         success: "Сәтті!",
@@ -1282,6 +1484,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
         archetype: "Архетип",
         tone: "Тон",
       },
+    },
+    book: {
+      details: "Әңгіме мәліметтері",
+      chapters: "Тараулар",
     },
     chapter: {
       title: "Тарау: {name}",
@@ -1494,6 +1700,24 @@ export const dictionaries: Record<Locale, Dictionary> = {
       powerful: "Күшті және батыл",
       philosophical: "Философиялық және терең",
       triumphant: "Жеңіспен және жеңімпаз",
+    },
+    transactions: {
+      title: "Транзакциялар тарихы",
+      subtitle: "Барлық төлемдер мен кредит сатып алулар",
+      backToDashboard: "Артқа",
+      noTransactions: "Әзірге транзакциялар жоқ",
+      noTransactionsDesc: "Төлем тарихы бірінші сатып алудан кейін осында пайда болады",
+      buyCredits: "Кредит сатып алу",
+      statusCompleted: "Аяқталды",
+      statusPending: "Өңделуде",
+      statusFailed: "Қате",
+      product7: "7 тарау",
+      product20: "20 тарау",
+      product40: "40 тарау",
+      product100: "Айлық жазылым",
+      credits: "кредит",
+      securePayment: "Барлық төлемдер Freedom Pay арқылы қауіпсіз өңделеді",
+      viewHistory: "Тарих",
     },
     common: {
       loading: "Жүктелуде...",
