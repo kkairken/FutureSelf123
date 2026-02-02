@@ -3,7 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { getUserFromToken } from "@/lib/auth";
 import { generateChapterContinuation, generateStorySummary } from "@/lib/openai";
 
-export const runtime = "edge";
+// Using Node.js runtime for longer timeout (default 60s on Vercel)
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   let bookId: string | null = null;
